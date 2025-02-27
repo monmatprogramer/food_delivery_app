@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:food_delivery_app/core/error/exceptions.dart';
 import 'package:food_delivery_app/core/error/failures.dart';
 import 'package:food_delivery_app/core/network/network_info.dart';
 import 'package:food_delivery_app/data/datasources/local/restaurant_local_data_source.dart';
@@ -17,11 +18,9 @@ class RestaurantRepositoryImpl implements RestaurantRepository {
     required this.localDataSource,
     required this.networkInfo,
   });
+
   @override
-  Future<Either<Failures, List<CategoryEntity>>> getCategories() {
-    // TODO: implement getCategories
-    throw UnimplementedError();
-  }
+  Future<Either<Failures, List<CategoryEntity>>> getCategories() async {}
 
   @override
   Future<Either<Failures, List<RestaurantEntity>>> getFeaturedRestaurants() {
@@ -36,9 +35,22 @@ class RestaurantRepositoryImpl implements RestaurantRepository {
   }
 
   @override
-  Future<Either<Failures, List<RestaurantEntity>>> getRestaurants() {
-    // TODO: implement getRestaurants
-    throw UnimplementedError();
+  Future<Either<Failures, List<RestaurantEntity>>> getRestaurants() async {
+    if (await networkInfo.isConnected) {
+      try {
+        final remoteRestaurants = await remoteDataSource.getRestaurants();
+        /**
+         * remoteRestaurants stored data from fetching API
+         */
+        await localDataSource.cachRestaurants(remoteRestaurants);
+        /**
+         * After we got data, we store in localDataSource object
+         */
+        return Right(remoteRestaurants);
+      } on ServerException catch (e) {
+        return Left(ServerFailure(message: e.message));
+      }
+    }
   }
 
   @override
