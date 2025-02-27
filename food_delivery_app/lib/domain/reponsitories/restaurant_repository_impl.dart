@@ -50,6 +50,13 @@ class RestaurantRepositoryImpl implements RestaurantRepository {
       } on ServerException catch (e) {
         return Left(ServerFailure(message: e.message));
       }
+    } else {
+      try {
+        final localRestaurants = await localDataSource.getCacheRestaurants();
+        return Right(localRestaurants);
+      } on CacheException catch (e) {
+        return Left(CacheFailure(message: e.message));
+      }
     }
   }
 
