@@ -43,6 +43,7 @@ dependencies:
   hive: ^2.2.3
   build_runner: ^2.4.15
   build: ^2.4.2
+  flutter_bloc: ^9.0.0
 
 dev_dependencies:
   flutter_test:

@@ -20,18 +20,71 @@ class RestaurantRepositoryImpl implements RestaurantRepository {
   });
 
   @override
-  Future<Either<Failures, List<CategoryEntity>>> getCategories() async {}
-
-  @override
-  Future<Either<Failures, List<RestaurantEntity>>> getFeaturedRestaurants() {
-    // TODO: implement getFeaturedRestaurants
-    throw UnimplementedError();
+  Future<Either<Failures, List<CategoryEntity>>> getCategories() async {
+    if (await networkInfo.isConnected) {
+      try {
+        final remoteCategories = await remoteDataSource.getCategories();
+        await localDataSource.cacheCategories(remoteCategories);
+        return Right(remoteCategories);
+      } on ServerException catch (e) {
+        return Left(ServerFailure(message: e.message));
+      }
+    } else {
+      try {
+        final localCategories = await localDataSource.getCachedCategories();
+        return Right(localCategories);
+      } on CacheException catch (e) {
+        return Left(CacheFailure(message: e.message));
+      }
+    }
   }
 
   @override
-  Future<Either<Failures, RestaurantEntity>> getRestaurantDetails(int id) {
-    // TODO: implement getRestaurantDetails
-    throw UnimplementedError();
+  Future<Either<Failures, List<RestaurantEntity>>>
+      getFeaturedRestaurants() async {
+    if (await networkInfo.isConnected) {
+      try {
+        final remoteRestaurants =
+            await remoteDataSource.getFeaturedRestaurants();
+        await localDataSource.cacheFeaturedRestaurants(remoteRestaurants);
+        return Right(remoteRestaurants);
+      } on ServerException catch (e) {
+        return Left(ServerFailure(message: e.message));
+      }
+    } else {
+      try {
+        final localRestaurants =
+            await localDataSource.getCachedFeaturedRestaurants();
+        return Right(localRestaurants);
+      } on CacheException catch (e) {
+        return Left(CacheFailure(message: e.message));
+      }
+    }
+  }
+
+  @override
+  Future<Either<Failures, RestaurantEntity>> getRestaurantDetails(
+      int id) async {
+    if (await networkInfo.isConnected) {
+      try {
+        final remoteRestaurant = await remoteDataSource.getRestaurantById(id);
+        return Right(remoteRestaurant);
+      } on ServerException catch (e) {
+        return Left(ServerFailure(message: e.message));
+      }
+    } else {
+      try {
+        final localRestaurants = await localDataSource.getCacheRestaurants();
+        final restaurant = localRestaurants.firstWhere(
+          (restaurant) => restaurant.id == id,
+          orElse: () =>
+              throw CacheException(message: "Restaurant not found in cache."),
+        );
+        return Right(restaurant);
+      } on CacheException catch (e) {
+        return Left(CacheFailure(message: e.message));
+      }
+    }
   }
 
   @override
@@ -62,8 +115,25 @@ class RestaurantRepositoryImpl implements RestaurantRepository {
 
   @override
   Future<Either<Failures, List<RestaurantEntity>>> getRestaurantsByCategory(
-      int categoryId) {
-    // TODO: implement getRestaurantsByCategory
-    throw UnimplementedError();
+      int categoryId) async {
+    if (await networkInfo.isConnected) {
+      try {
+        final remoteRestaurants =
+            await remoteDataSource.getRestaurantsByCategory(categoryId);
+        return Right(remoteRestaurants);
+      } on ServerException catch (e) {
+        return Left(ServerFailure(message: e.message));
+      }
+    } else {
+      try {
+        final localRestaurants = await localDataSource.getCacheRestaurants();
+        final filteredRestaurants = localRestaurants
+            .where((restaurant) => restaurant.category.id == categoryId)
+            .toList();
+        return Right(filteredRestaurants);
+      } on CacheException catch (e) {
+        return Left(CacheFailure(message: e.message));
+      }
+    }
   }
 }

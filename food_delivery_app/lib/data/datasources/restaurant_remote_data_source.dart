@@ -16,7 +16,7 @@ abstract class RestaurantRemoteDataSource {
   Future<List<RestaurantModel>> getRestaurantsByCategory(int categoryId);
 
   /// Get restaurant by ID from API
-  Future<List<RestaurantModel>> getRestaurantById(int id);
+  Future<RestaurantModel> getRestaurantById(int id);
 
   /// Get all categories from API
   Future<List<CategoryModel>> getCategories();
@@ -63,12 +63,13 @@ class RestaurantRemoteDataSourceImpl implements RestaurantRemoteDataSource {
   }
 
   @override
-  Future<List<RestaurantModel>> getRestaurantById(int id) async {
+  Future<RestaurantModel> getRestaurantById(int id) async {
     try {
       final respone =
           await client.get("${AppConstants.restaurantsEndpoint}$id/");
       // Convert to list of model
-      return (respone.data);
+      return RestaurantModel.fromJson(respone.data);
+    
     } on DioException catch (e) {
       throw ServerException(
           message:

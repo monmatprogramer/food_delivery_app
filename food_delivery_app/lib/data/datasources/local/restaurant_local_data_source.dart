@@ -69,12 +69,12 @@ class RestaurantLocalDataSourceImpl implements RestaurantLocalDataSource {
       // Update with featured flag
       for (var restaurant in restaurants) {
         var updatedRestaurant = restaurant;
-        if (existingRestaurants.containsKey(restaurant.id)) {
+        if (existingRestaurants.containsKey(updatedRestaurant.id)) {
           // Restaurant already exists,just update featured flag
-          await restaurantBox.put(restaurant.id, restaurant);
+          await restaurantBox.put(updatedRestaurant.id, updatedRestaurant);
         } else {
           // New restaurant, add to box
-          await restaurantBox.put(restaurant.id, restaurant);
+          await restaurantBox.put(updatedRestaurant.id, updatedRestaurant);
         }
       }
     } catch (e) {
