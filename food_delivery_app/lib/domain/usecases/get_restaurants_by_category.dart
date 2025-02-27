@@ -1,7 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
 import 'package:food_delivery_app/core/error/failures.dart';
-import 'package:food_delivery_app/domain/entities/category_entity.dart';
 import 'package:food_delivery_app/domain/entities/restaurant_entity.dart';
 import 'package:food_delivery_app/domain/reponsitories/restaurant_repository.dart';
 
