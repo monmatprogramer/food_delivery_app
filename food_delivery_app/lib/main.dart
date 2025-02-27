@@ -12,17 +12,20 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Food delivery app',
       theme: ThemeData(
         // tested with just a hot reload.
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: ErrorDisplayWidget(
-          message: "Error test",
-          onRetry: () {
-            debugPrint("Error is pressed");
-          }),
+      home: Scaffold(
+        body: ErrorDisplayWidget(
+            message: "Error test",
+            onRetry: () {
+              debugPrint("Error is pressed");
+            }),
+      ),
     );
   }
 }
