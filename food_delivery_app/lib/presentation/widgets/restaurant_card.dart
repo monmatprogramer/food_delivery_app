@@ -126,7 +126,6 @@ class RestaurantListCard extends StatelessWidget {
                               AppColors.secondaryLight.withValues(alpha: 0.2),
                           borderRadius: BorderRadius.circular(
                             AppDimensions.borderRadiusSmall,
-                            
                           ),
                           //TODO: Presentation-common widgets
                         ),
