@@ -1,5 +1,4 @@
 import 'package:equatable/equatable.dart';
-import 'package:flutter/foundation.dart';
 import 'package:food_delivery_app/domain/entities/category_entity.dart';
 import 'package:food_delivery_app/domain/entities/tag_entity.dart';
 

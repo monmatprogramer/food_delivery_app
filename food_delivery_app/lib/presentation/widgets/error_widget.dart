@@ -31,6 +31,21 @@ class ErrorDisplayWidget extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
+            const SizedBox(
+              height: AppDimensions.marginLarge,
+            ),
+            ElevatedButton(
+              onPressed: onRetry,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.primary,
+                foregroundColor: Colors.white,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: AppDimensions.marginSmall,
+                  vertical: AppDimensions.marginSmall,
+                ),
+              ),
+              child: const Text(AppConstants.retryText),
+            )
           ],
         ),
       ),

@@ -1,8 +1,6 @@
 import 'package:food_delivery_app/data/models/category_model.dart';
 import 'package:food_delivery_app/data/models/tag_model.dart';
-import 'package:food_delivery_app/domain/entities/category_entity.dart';
 import 'package:food_delivery_app/domain/entities/restaurant_entity.dart';
-import 'package:food_delivery_app/domain/entities/tag_entity.dart';
 import 'package:hive/hive.dart';
 import 'package:json_annotation/json_annotation.dart';
 
