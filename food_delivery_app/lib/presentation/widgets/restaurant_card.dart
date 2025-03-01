@@ -14,8 +14,9 @@ class RestaurantListCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       margin: const EdgeInsets.symmetric(
-          horizontal: AppDimensions.marginMedium,
-          vertical: AppDimensions.marginSmall),
+        horizontal: AppDimensions.marginMedium,
+        vertical: AppDimensions.marginSmall,
+      ),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(AppDimensions.borderRadiusMedium),
       ),
@@ -49,7 +50,12 @@ class RestaurantListCard extends StatelessWidget {
                     Container(
                         width: 80,
                         height: 80,
-                        child: Placeholder(),
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                            image: NetworkImage(restaurant.imageUrl!, scale: 1),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
                       )
                     : Container(
                         width: 80,
@@ -127,7 +133,13 @@ class RestaurantListCard extends StatelessWidget {
                           borderRadius: BorderRadius.circular(
                             AppDimensions.borderRadiusSmall,
                           ),
-                          //TODO: Presentation-common widgets
+                        ),
+                        child: Text(
+                          tag.name,
+                          style: const TextStyle(
+                            fontSize: AppDimensions.fontSmall,
+                            color: AppColors.secondary,
+                          ),
                         ),
                       );
                     }).toList(),
