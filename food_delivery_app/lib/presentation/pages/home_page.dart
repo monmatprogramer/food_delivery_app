@@ -195,16 +195,62 @@ class _HomePageState extends State<HomePage> {
                       setState(() {
                         _selectedCategoryIndex = index;
                       });
-
+                      //Load restaurants by category
+                      if (index == 0) {
+                        // "All" category selected
+                        context
+                            .read<RestaurantBloc>()
+                            .add(GetRestaurantsEvent());
+                      } else {
+                        //sepecif category selected
+                        context
+                            .read<RestaurantBloc>()
+                            .add(GetRestaurantsByCategoryEvent());
+                      }
                     },
-                    //Load restaurants by category
-                    if(index == 0){
-                      // "All" category selected
-                      context.read<RestaurantBloc>().add(GetRestaurantsEvent());
-                    }
+                    child: Container(
+                      margin: const EdgeInsets.symmetric(
+                        horizontal: AppDimensions.marginSmall,
+                      ),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: AppDimensions.marginMedium,
+                        vertical: AppDimensions.marginSmall,
+                      ),
+                      decoration: BoxDecoration(
+                          color: isSelected ? AppColors.primary : Colors.white,
+                          borderRadius: BorderRadius.circular(20),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withValues(alpha: 0.05),
+                              blurRadius: 4,
+                              offset: const Offset(0, 2),
+                            )
+                          ]),
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.category,
+                            size: 20,
+                            color:
+                                isSelected ? Colors.white : AppColors.primary,
+                          ),
+                          const SizedBox(
+                            width: 8,
+                          ),
+                          Text(
+                            category.name,
+                            style: TextStyle(
+                              color: isSelected ? Colors.white : Colors.black,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   );
                 });
           }
+          return const SizedBox.shrink();
         }),
       ),
     );
