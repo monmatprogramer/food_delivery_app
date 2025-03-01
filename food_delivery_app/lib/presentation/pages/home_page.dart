@@ -205,7 +205,7 @@ class _HomePageState extends State<HomePage> {
                         //sepecif category selected
                         context
                             .read<RestaurantBloc>()
-                            .add(GetRestaurantsByCategoryEvent());
+                            .add(GetRestaurantsByCategoryEvent(category.id));
                       }
                     },
                     child: Container(
