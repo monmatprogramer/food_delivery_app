@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:food_delivery_app/domain/entities/category_entity.dart';
-import 'package:food_delivery_app/domain/entities/restaurant_entity.dart';
-import 'package:food_delivery_app/domain/entities/tag_entity.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:food_delivery_app/presentation/bloc/restaurant/restaurant_bloc.dart';
 import 'package:food_delivery_app/presentation/pages/home_page.dart';
-import 'package:food_delivery_app/presentation/widgets/featured_restaurant_card.dart';
-import 'package:food_delivery_app/presentation/widgets/restaurant_card.dart';
 
 void main() {
   runApp(const MyApp());
@@ -24,7 +21,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: HomePage(),
+      home: HomePage()
     );
   }
 }

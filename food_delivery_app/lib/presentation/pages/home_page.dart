@@ -3,11 +3,16 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_delivery_app/core/contants/app_constants.dart';
 import 'package:food_delivery_app/core/contants/theme_constants.dart';
 import 'package:food_delivery_app/domain/entities/category_entity.dart';
+import 'package:food_delivery_app/domain/entities/restaurant_entity.dart';
 import 'package:food_delivery_app/presentation/bloc/category/category_bloc.dart';
-import 'package:food_delivery_app/presentation/bloc/category/category_event.dart';
 import 'package:food_delivery_app/presentation/bloc/category/category_state.dart';
 import 'package:food_delivery_app/presentation/bloc/restaurant/restaurant_bloc.dart';
 import 'package:food_delivery_app/presentation/bloc/restaurant/restaurant_event.dart';
+import 'package:food_delivery_app/presentation/bloc/restaurant/restaurant_state.dart';
+import 'package:food_delivery_app/presentation/pages/restaurant_details_page.dart';
+import 'package:food_delivery_app/presentation/widgets/error_widget.dart';
+import 'package:food_delivery_app/presentation/widgets/loading_widget.dart';
+import 'package:food_delivery_app/presentation/widgets/restaurant_card.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -75,6 +80,12 @@ class _HomePageState extends State<HomePage> {
 
           // Category section
           _buildCategories(),
+
+          //Featured Restaurants
+          _buildFeaturedRestaurants(),
+
+          // All Restaurant List
+          _buildRestaurantList(),
         ],
       ),
     );
@@ -229,6 +240,7 @@ class _HomePageState extends State<HomePage> {
                       child: Row(
                         children: [
                           Icon(
+                            //TODO: Add custom Icon
                             Icons.category,
                             size: 20,
                             color:
@@ -254,5 +266,162 @@ class _HomePageState extends State<HomePage> {
         }),
       ),
     );
+  }
+
+  /// Build featured restaurants section with horizontal scrolling cards
+  Widget _buildFeaturedRestaurants() {
+    return SliverToBoxAdapter(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Padding(
+            padding: EdgeInsets.all(AppDimensions.marginSmall),
+            child: Text(
+              AppConstants.featuredRestaurants,
+              style: TextStyle(
+                fontSize: AppDimensions.fontExtraLarge,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          SizedBox(
+            height: 220,
+            child: BlocBuilder<RestaurantBloc, RestaurantState>(
+              builder: (context, state) {
+                if (state is RestaurantLoading) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                } else if (state is FeaturedRestaurantLoaded) {
+                  final restaurants = state.restaurants;
+                  if (restaurants.isEmpty) {
+                    return const Center(
+                      child: Text("No Featured restaurants available"),
+                    );
+                  }
+                  return ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: AppDimensions.marginSmall,
+                    ),
+                    itemCount: restaurants.length,
+                    itemBuilder: (context, index) {
+                      final restaurant = restaurants[index];
+                      //TODO: Add FeaturedRestaurantCard()
+                      // return FeaturedRestaurantCard(
+                      //   restaurant: restaurant,
+                      //   //TODO: Add more custome function
+                      //   onTap: () => null,
+                      // );
+                    },
+                  );
+                } else if (state is RestaurantError) {
+                  return Center(
+                    child: Text(
+                      state.message,
+                      style: const TextStyle(color: AppColors.error),
+                    ),
+                  );
+                }
+                return const SizedBox.shrink();
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildRestaurantList() {
+    return BlocBuilder<RestaurantBloc, RestaurantState>(
+      builder: (context, state) {
+        if (state is RestaurantLoading) {
+          return const SliverFillRemaining(
+            child: LoadingWidget(),
+          );
+        } else if (state is RestaurantLoaded) {
+          final restaurants = state.restaurants;
+
+          if (restaurants.isEmpty) {
+            return const SliverFillRemaining(
+              child: Center(
+                child: Text("No restaurants avaialable"),
+              ),
+            );
+          }
+
+          return SliverList(
+            delegate: SliverChildBuilderDelegate(
+              (context, index) {
+                if (index == 0) {
+                  // Section header
+                  return const Padding(
+                    padding: EdgeInsets.fromLTRB(
+                      AppDimensions.marginMedium,
+                      AppDimensions.marginMedium,
+                      AppDimensions.marginMedium,
+                      AppDimensions.marginSmall,
+                    ),
+                    child: Text(
+                      AppConstants.allRestaurants,
+                      style: TextStyle(
+                        fontSize: AppDimensions.fontExtraLarge,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  );
+                }
+                final restaurant = restaurants[index - 1];
+                return RestaurantListCard(
+                  restaurant: restaurant,
+                  //TODO: Add event custom
+                  onTap: () => null,
+                );
+              },
+              childCount: restaurants.length + 1,
+            ),
+          );
+        } else if (state is RestaurantError) {
+          return SliverFillRemaining(
+            child: ErrorDisplayWidget(
+              message: state.message,
+              onRetry: () =>
+                  context.read<RestaurantBloc>().add(GetRestaurantsEvent()),
+            ),
+          );
+        }
+        return const SliverFillRemaining(
+          child: SizedBox.shrink(),
+        );
+      },
+    );
+  }
+
+  /// Navigate to restaurant detail page
+  void _navigateToRestaurantDetails(RestaurantEntity restaurant) {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (_) => RestaurantDetailsPage(restaurant: restaurant)));
+  }
+
+  /// Helper method to convert category icon string to IconData
+  IconData _getCategoryIcon(String iconName) {
+    switch (iconName.toLowerCase()) {
+      case 'restaurant':
+        return Icons.restaurant;
+      case 'fastfood':
+        return Icons.fastfood;
+      case 'local_pizza':
+        return Icons.local_pizza;
+      case 'eco':
+        return Icons.eco;
+      case 'cake':
+        return Icons.cake;
+      case 'local_drink':
+        return Icons.local_drink;
+      default:
+        return Icons.restaurant;
+    }
   }
 }
