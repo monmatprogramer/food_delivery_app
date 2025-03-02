@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:food_delivery_app/presentation/bloc/category/category_bloc.dart';
 import 'package:food_delivery_app/presentation/bloc/restaurant/restaurant_bloc.dart';
 import 'injection_container.dart' as di;
 import 'package:food_delivery_app/presentation/pages/home_page.dart';
@@ -23,9 +24,12 @@ class MyApp extends StatelessWidget {
         BlocProvider<RestaurantBloc>(
           create: (_) => di.sl<RestaurantBloc>(),
         ),
-        //TODO: Main App File : Provide category BLoC
+        // Provide category Bloc
+        BlocProvider<CategoryBloc>(
+          create: (_) => di.sl<CategoryBloc>(),
+        ),
       ],
-      child: MaterialApp(
+      child: MaterialApp( 
           debugShowCheckedModeBanner: false,
           title: 'Food delivery app',
           theme: ThemeData(
