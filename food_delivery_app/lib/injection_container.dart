@@ -76,8 +76,8 @@ Future<void> init() async {
   //--Local
   sl.registerLazySingleton<RestaurantLocalDataSource>(
     () => RestaurantLocalDataSourceImpl(
-      restaurantBox: sl(),
-      categoriesBox: sl(),
+      restaurantBox: restaurantsBox,
+      categoriesBox: categoriesBox,
     ),
   );
 
