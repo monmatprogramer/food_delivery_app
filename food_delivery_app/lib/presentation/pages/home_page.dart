@@ -13,6 +13,7 @@ import 'package:food_delivery_app/presentation/bloc/restaurant/restaurant_event.
 import 'package:food_delivery_app/presentation/bloc/restaurant/restaurant_state.dart';
 import 'package:food_delivery_app/presentation/pages/restaurant_details_page.dart';
 import 'package:food_delivery_app/presentation/widgets/error_widget.dart';
+import 'package:food_delivery_app/presentation/widgets/featured_restaurant_card.dart';
 import 'package:food_delivery_app/presentation/widgets/loading_widget.dart';
 import 'package:food_delivery_app/presentation/widgets/restaurant_card.dart';
 
@@ -312,12 +313,10 @@ class _HomePageState extends State<HomePage> {
                     itemCount: restaurants.length,
                     itemBuilder: (context, index) {
                       final restaurant = restaurants[index];
-                      //TODO: Add FeaturedRestaurantCard()
-                      // return FeaturedRestaurantCard(
-                      //   restaurant: restaurant,
-                      //   //TODO: Add more custome function
-                      //   onTap: () => null,
-                      // );
+                      return FeaturedRestaurantCard(
+                        restaurant: restaurant,
+                        onTap: () => _navigateToRestaurantDetails(restaurant),
+                      );
                     },
                   );
                 } else if (state is RestaurantError) {
