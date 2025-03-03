@@ -21,17 +21,33 @@ class ApiClient {
 
     // Add intercpetor logging
     _dio.interceptors.add(
-      InterceptorsWrapper(onRequest: (options, handler) {
-        _logger.d("REQUEST[${options.method}] => URL: ${options.uri}");
-        return handler.next(options);
-      }, onResponse: (response, handler) {
-        _logger.d("RESPONSE[${response.statusCode}] => DATA: ${response.data}");
-      },
-          //void Function(DioException, ErrorInterceptorHandler)?
-          onError: (DioException e, handler) {
-        _logger.e("ERROR[${e.response?.statusCode}] => ${e.message}");
-        return handler.next(e);
-      }),
+      InterceptorsWrapper(
+        onRequest: (options, handler) {
+          _logger.d("REQUEST[${options.method}] => URL: ${options.uri}");
+          return handler.next(options);
+        },
+        onResponse: (response, handler) {
+          _logger
+              .d("RESPONSE[${response.statusCode}] => DATA: ${response.data}");
+          return handler.next(response);
+        },
+        //void Function(DioException, ErrorInterceptorHandler)?
+        onError: (DioException e, handler) {
+          _logger.e("ERROR[${e.response?.statusCode}] => ${e.message}");
+
+          // Handle empty data for testing
+          if (e.response?.statusCode == 404) {
+            return handler.resolve(
+              Response(requestOptions: e.requestOptions, data: {
+                'success': true,
+                'message': 'Mock data',
+                'results': [],
+              }),
+            );
+          }
+          return handler.next(e);
+        },
+      ),
     );
   }
 

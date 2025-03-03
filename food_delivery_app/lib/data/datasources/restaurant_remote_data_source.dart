@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:food_delivery_app/core/contants/app_constants.dart';
 import 'package:food_delivery_app/core/error/exceptions.dart';
 import 'package:food_delivery_app/core/network/dio_client.dart';
@@ -30,6 +31,7 @@ class RestaurantRemoteDataSourceImpl implements RestaurantRemoteDataSource {
   Future<List<CategoryModel>> getCategories() async {
     try {
       final response = await client.get(AppConstants.categoriesEndpoint);
+      debugPrint("🆗 category response data: ${response.data['results']}");
       return (response.data['results'] as List)
           .map((json) => CategoryModel.fromJson(json))
           .toList();
@@ -69,7 +71,6 @@ class RestaurantRemoteDataSourceImpl implements RestaurantRemoteDataSource {
           await client.get("${AppConstants.restaurantsEndpoint}$id/");
       // Convert to list of model
       return RestaurantModel.fromJson(respone.data);
-    
     } on DioException catch (e) {
       throw ServerException(
           message:
