@@ -1,0 +1,8 @@
+'1', 'Italiano Delight', 'https://example.com/images/italiano.jpg', '4.7', '2025-02-28 12:30:00', '1', NULL
+'2', 'Italiano Delight', 'https://example.com/images/italiano.jpg', '4.7', '2025-02-28 12:30:00', '1', NULL
+'3', 'Italiano Delight', 'https://example.com/images/italiano.jpg', '4.7', '2025-02-28 12:30:00', '1', NULL
+'4', 'Sushi Paradise', 'https://example.com/images/sushi.jpg', '4.9', '2025-02-28 11:15:00', '1', 'Chinese'
+'5', 'Burger Kingdom', 'https://example.com/images/burger.jpg', '4.2', '2025-02-28 14:45:00', '1', NULL
+'8', 'Pizza Palace', 'https://example.com/images/pizza.jpg', '4.6', '2025-02-28 15:30:00', '1', NULL
+'10', 'Green Garden', 'https://example.com/images/vegan.jpg', '4.3', '2025-02-28 13:30:00', '1', NULL
+'12', 'BBQ Station', 'https://example.com/images/bbq.jpg', '4.8', '2025-02-28 19:15:00', '1', NULL

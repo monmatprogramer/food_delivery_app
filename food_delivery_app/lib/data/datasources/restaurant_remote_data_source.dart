@@ -31,10 +31,11 @@ class RestaurantRemoteDataSourceImpl implements RestaurantRemoteDataSource {
   Future<List<CategoryModel>> getCategories() async {
     try {
       final response = await client.get(AppConstants.categoriesEndpoint);
-      debugPrint("🆗 category response data: ${response.data['results']}");
-      return (response.data['results'] as List)
+      final responseConverted = (response.data['results'] as List)
           .map((json) => CategoryModel.fromJson(json))
           .toList();
+      debugPrint("🆗 category response data: $responseConverted");
+      return responseConverted;
     } on DioException catch (e) {
       throw ServerException(
           message:
