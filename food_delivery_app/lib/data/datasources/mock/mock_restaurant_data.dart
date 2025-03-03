@@ -52,7 +52,7 @@ class MockRestaurantData {
         id: 3,
         name: 'Taco Town',
         imageUrl:
-            'https://images.unsplash.com/photo-1564767609342-620cb19b2357?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60',
+            'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0e/78/bf/8c/photo1jpg.jpg?w=1800&h=1000&s=1',
         rating: 4.3,
         deliveryTime: '25-35 min',
         category: categories[2], // Mexican
