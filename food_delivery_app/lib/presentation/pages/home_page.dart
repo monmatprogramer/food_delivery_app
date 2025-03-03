@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_delivery_app/core/contants/app_constants.dart';
@@ -5,6 +6,7 @@ import 'package:food_delivery_app/core/contants/theme_constants.dart';
 import 'package:food_delivery_app/domain/entities/category_entity.dart';
 import 'package:food_delivery_app/domain/entities/restaurant_entity.dart';
 import 'package:food_delivery_app/presentation/bloc/category/category_bloc.dart';
+import 'package:food_delivery_app/presentation/bloc/category/category_event.dart';
 import 'package:food_delivery_app/presentation/bloc/category/category_state.dart';
 import 'package:food_delivery_app/presentation/bloc/restaurant/restaurant_bloc.dart';
 import 'package:food_delivery_app/presentation/bloc/restaurant/restaurant_event.dart';
@@ -26,46 +28,47 @@ class _HomePageState extends State<HomePage> {
   bool _isAppBarCollapsed = false;
   int _selectedCategoryIndex = 0;
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   _setUpController();
-  //   // Load initial data
-  //   _loadData();
-  // }
+  @override
+  void initState() {
+    super.initState();
+    _setUpController();
+    // Load initial data
+    _loadData();
+  }
 
-  // /// Set up scroll controller for collapsible app bar
-  // void _setUpController() {
-  //   _scrollController.addListener(() {
-  //     if (_scrollController.offset > 150 && !_isAppBarCollapsed) {
-  //       setState(() {
-  //         _isAppBarCollapsed = true;
-  //       });
-  //     } else if (_scrollController.offset <= 150 && _isAppBarCollapsed) {
-  //       setState(() {
-  //         _isAppBarCollapsed = false;
-  //       });
-  //     }
-  //   });
-  // }
+  /// Set up scroll controller for collapsible app bar
+  void _setUpController() {
+    _scrollController.addListener(() {
+      if (_scrollController.offset > 150 && !_isAppBarCollapsed) {
+        setState(() {
+          _isAppBarCollapsed = true;
+        });
+      } else if (_scrollController.offset <= 150 && _isAppBarCollapsed) {
+        setState(() {
+          _isAppBarCollapsed = false;
+        });
+      }
+    });
+  }
 
-  // /// Load initial data (categories and rstaurants)
-  // void _loadData() {
-  //   // Load categories
-  //   context.read<CategoryBloc>().add(GetCategoryEvent());
+  /// Load initial data (categories and rstaurants)
+  void _loadData() {
+    debugPrint("ℹ _loadData is called");
+    // Load categories
+    context.read<CategoryBloc>().add(GetCategoryEvent());
 
-  //   // Load featured restaurants
-  //   context.read<RestaurantBloc>().add(GetFeaturedRestaurantEvent());
+    // Load featured restaurants
+    context.read<RestaurantBloc>().add(GetFeaturedRestaurantEvent());
 
-  //   // Load all restaurants
-  //   context.read<RestaurantBloc>().add(GetRestaurantsEvent());
-  // }
+    // Load all restaurants
+    context.read<RestaurantBloc>().add(GetRestaurantsEvent());
+  }
 
-  // @override
-  // void dispose() {
-  //   _scrollController.dispose();
-  //   super.dispose();
-  // }
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -103,8 +106,10 @@ class _HomePageState extends State<HomePage> {
         title: _isAppBarCollapsed
             ? const Text(
                 AppConstants.appTitle,
-                style:
-                    TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
               )
             : null,
         background: Stack(
@@ -120,14 +125,15 @@ class _HomePageState extends State<HomePage> {
             // Gradient overlay
             Container(
               decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                colors: [
-                  Colors.transparent,
-                  Colors.black.withValues(alpha: 0.7)
-                ],
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-              )),
+                gradient: LinearGradient(
+                  colors: [
+                    Colors.transparent,
+                    Colors.black.withValues(alpha: 0.7)
+                  ],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                ),
+              ),
             ),
 
             // Banner Text
@@ -240,8 +246,7 @@ class _HomePageState extends State<HomePage> {
                       child: Row(
                         children: [
                           Icon(
-                            //TODO: Add custom Icon
-                            Icons.category,
+                            _getCategoryIcon(category.icon),
                             size: 20,
                             color:
                                 isSelected ? Colors.white : AppColors.primary,
@@ -335,6 +340,7 @@ class _HomePageState extends State<HomePage> {
   Widget _buildRestaurantList() {
     return BlocBuilder<RestaurantBloc, RestaurantState>(
       builder: (context, state) {
+        debugPrint("🆗 state is : $state");
         if (state is RestaurantLoading) {
           return const SliverFillRemaining(
             child: LoadingWidget(),
@@ -374,8 +380,7 @@ class _HomePageState extends State<HomePage> {
                 final restaurant = restaurants[index - 1];
                 return RestaurantListCard(
                   restaurant: restaurant,
-                  //TODO: Add event custom
-                  onTap: () => null,
+                  onTap: () => _navigateToRestaurantDetails(restaurant),
                 );
               },
               childCount: restaurants.length + 1,
@@ -385,8 +390,10 @@ class _HomePageState extends State<HomePage> {
           return SliverFillRemaining(
             child: ErrorDisplayWidget(
               message: state.message,
-              onRetry: () =>
-                  context.read<RestaurantBloc>().add(GetRestaurantsEvent()),
+              onRetry: () {
+                debugPrint("🔼 OnRetry is pressed");
+                context.read<RestaurantBloc>().add(GetRestaurantsEvent());
+              },
             ),
           );
         }

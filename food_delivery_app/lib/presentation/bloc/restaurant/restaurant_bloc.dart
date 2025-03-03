@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_delivery_app/domain/usecases/get_featured_restaurants.dart';
 import 'package:food_delivery_app/domain/usecases/get_restaurants.dart';
@@ -25,6 +26,7 @@ class RestaurantBloc extends Bloc<RestaurantEvent, RestaurantState> {
       GetRestaurantsEvent event, Emitter<RestaurantState> emit) async {
     emit(RestaurantLoading());
     final result = await getRestaurants();
+    debugPrint("➡️ Result: $result");
     result.fold(
       (failure) => emit(RestaurantError(failure.message)),
       (restaurants) => emit(RestaurantLoaded(restaurants)),
