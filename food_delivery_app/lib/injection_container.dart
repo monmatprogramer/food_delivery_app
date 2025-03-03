@@ -15,7 +15,6 @@ import 'package:food_delivery_app/domain/usecases/get_restaurants.dart';
 import 'package:food_delivery_app/domain/usecases/get_restaurants_by_category.dart';
 import 'package:food_delivery_app/presentation/bloc/category/category_bloc.dart';
 import 'package:food_delivery_app/presentation/bloc/restaurant/restaurant_bloc.dart';
-import 'package:food_delivery_app/presentation/bloc/restaurant/restaurant_state.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
@@ -71,9 +70,11 @@ Future<void> init() async {
   );
 
   //Data source
+  //--Remote
   sl.registerLazySingleton<RestaurantRemoteDataSource>(
       () => RestaurantRemoteDataSourceImpl(client: sl()));
-  sl.registerLazySingleton<RestaurantLocalDataSourceImpl>(
+  //--Local
+  sl.registerLazySingleton<RestaurantLocalDataSource>(
     () => RestaurantLocalDataSourceImpl(
       restaurantBox: sl(),
       categoriesBox: sl(),
