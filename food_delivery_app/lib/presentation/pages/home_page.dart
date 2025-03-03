@@ -178,7 +178,7 @@ class _HomePageState extends State<HomePage> {
         height: 70,
         child:
             BlocBuilder<CategoryBloc, CategoryState>(builder: (context, state) {
-          if (state is CategoryLoaded) {
+          if (state is CategoryLoading) {
             return const Center(
               child: CircularProgressIndicator(),
             );

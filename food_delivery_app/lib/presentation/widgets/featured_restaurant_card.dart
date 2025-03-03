@@ -31,12 +31,31 @@ class FeaturedRestaurantCard extends StatelessWidget {
                   top: Radius.circular(AppDimensions.borderRadiusMedium),
                 ),
                 child: restaurant.imageUrl != null
-                    ? //CachedNetworkImage(imageUrl: restaurant.imageUrl!,height: 120,width: double.infinity,fit: BoxFit.cover,placeholder: (context,url) => Container(height: 120,child: const Center(child: CircularProgressIndicator(),),),errorWidget: (context, url, error) => Container(height: 120,color: Colors.grey[200],child: const Icon(Icons.restaurant,color: Colors.grey,),),)
-                    Container(
+                    ? CachedNetworkImage(
+                        imageUrl: restaurant.imageUrl!,
                         height: 120,
                         width: double.infinity,
-                        color: Colors.grey[300],
+                        fit: BoxFit.cover,
+                        placeholder: (context, url) => Container(
+                          height: 120,
+                          child: const Center(
+                            child: CircularProgressIndicator(),
+                          ),
+                        ),
+                        errorWidget: (context, url, error) => Container(
+                          height: 120,
+                          color: Colors.grey[200],
+                          child: const Icon(
+                            Icons.restaurant,
+                            color: Colors.grey,
+                          ),
+                        ),
                       )
+                    // Container(
+                    //     height: 120,
+                    //     width: double.infinity,
+                    //     color: Colors.grey[300],
+                    //   )
                     : Container(
                         height: 120,
                         width: double.infinity,

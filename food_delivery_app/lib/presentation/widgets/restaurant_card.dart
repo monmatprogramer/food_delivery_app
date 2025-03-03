@@ -32,31 +32,30 @@ class RestaurantListCard extends StatelessWidget {
                 borderRadius:
                     BorderRadius.circular(AppDimensions.borderRadiusSmall),
                 child: restaurant.imageUrl != null
-                    ?
-                    // ? CachedNetworkImage(
-                    //     imageUrl: restaurant.imageUrl!,
-                    //     width: 80,
-                    //     height: 80,
-                    //     fit: BoxFit.cover,
-                    //     placeholder: (context, url) => Container(
-                    //       width: 80,
-                    //       height: 80,
-                    //       color: Colors.grey[200],
-                    //       child: const Center(
-                    //         child: CircularProgressIndicator(),
-                    //       ),
-                    //     ),
-                    //   )
-                    Container(
+                    ? CachedNetworkImage(
+                        imageUrl: restaurant.imageUrl!,
                         width: 80,
                         height: 80,
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                            image: NetworkImage(restaurant.imageUrl!, scale: 1),
-                            fit: BoxFit.cover,
+                        fit: BoxFit.cover,
+                        placeholder: (context, url) => Container(
+                          width: 80,
+                          height: 80,
+                          color: Colors.grey[200],
+                          child: const Center(
+                            child: CircularProgressIndicator(),
                           ),
                         ),
                       )
+                    // Container(
+                    //     width: 80,
+                    //     height: 80,
+                    //     decoration: BoxDecoration(
+                    //       image: DecorationImage(
+                    //         image: NetworkImage(restaurant.imageUrl!, scale: 1),
+                    //         fit: BoxFit.cover,
+                    //       ),
+                    //     ),
+                    //   )
                     : Container(
                         width: 80,
                         height: 80,
