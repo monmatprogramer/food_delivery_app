@@ -117,7 +117,7 @@ class _HomePageState extends State<HomePage> {
           children: [
             // Banner image
             Image.network(
-              "https://cdn.georgeinstitute.org/sites/default/files/styles/width1920_fallback/public/2020-10/world-food-day-2020.png",
+              "https://www.thetakeout.com/img/gallery/this-is-the-ideal-amount-of-time-to-spend-at-a-restaurant/slide--1724859999.webp",
               fit: BoxFit.cover,
               width: double.infinity,
               height: double.infinity,
