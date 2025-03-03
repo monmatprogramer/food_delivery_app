@@ -1,5 +1,4 @@
 import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart';
 import 'package:food_delivery_app/core/contants/app_constants.dart';
 import 'package:food_delivery_app/core/error/exceptions.dart';
 import 'package:food_delivery_app/core/network/dio_client.dart';
@@ -34,7 +33,7 @@ class RestaurantRemoteDataSourceImpl implements RestaurantRemoteDataSource {
       final responseConverted = (response.data['results'] as List)
           .map((json) => CategoryModel.fromJson(json))
           .toList();
-      debugPrint("🆗 category response data: $responseConverted");
+      //debugPrint("🆗 category response data: $responseConverted");
       return responseConverted;
     } on DioException catch (e) {
       throw ServerException(
