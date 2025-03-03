@@ -11,6 +11,7 @@ class FeaturedRestaurantCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    debugPrint("👉👉👉 Restaurant: $restaurant");
     return Container(
       width: 200,
       margin: const EdgeInsets.symmetric(horizontal: AppDimensions.marginSmall),

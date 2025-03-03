@@ -300,6 +300,7 @@ class _HomePageState extends State<HomePage> {
                   );
                 } else if (state is FeaturedRestaurantLoaded) {
                   final restaurants = state.restaurants;
+
                   if (restaurants.isEmpty) {
                     return const Center(
                       child: Text("No Featured restaurants available"),
