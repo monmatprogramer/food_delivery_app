@@ -36,7 +36,7 @@ Future<void> init() async {
 
   // Open Hive boxes
   final restaurantsBox =
-      await Hive.openBox<RestaurantModel>(AppConstants.categoriesBox);
+      await Hive.openBox<RestaurantModel>(AppConstants.restaurantsBox);
   final categoriesBox =
       await Hive.openBox<CategoryModel>(AppConstants.categoriesBox);
 
