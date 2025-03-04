@@ -20,6 +20,12 @@ class RestaurantBloc extends Bloc<RestaurantEvent, RestaurantState> {
     on<GetFeaturedRestaurantEvent>(_onGetFeaturedrestaurants);
     on<GetRestaurantsByCategoryEvent>(_onGetRestaurantsByCategory);
   }
+  @override
+  void onTransition(Transition<RestaurantEvent, RestaurantState> transition) {
+    super.onTransition(transition);
+    debugPrint(
+        '➡️ RestaurantBloc: ${transition.event} => ${transition.nextState}');
+  }
 
   /// Hndle GetRestaurantsEvent
   Future<void> _onGetRestaurants(

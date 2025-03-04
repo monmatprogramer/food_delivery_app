@@ -291,7 +291,7 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
           SizedBox(
-            height: 220,
+            height: 250,
             child: BlocBuilder<RestaurantBloc, RestaurantState>(
               builder: (context, state) {
                 if (state is RestaurantLoading) {
