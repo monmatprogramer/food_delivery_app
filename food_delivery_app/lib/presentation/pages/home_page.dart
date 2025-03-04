@@ -305,7 +305,6 @@ class _HomePageState extends State<HomePage> {
                       child: Text("No Featured restaurants available"),
                     );
                   }
-                  // debugPrint("=> ${restaurants.isEmpty} <=");
                   return ListView.builder(
                     scrollDirection: Axis.horizontal,
                     padding: const EdgeInsets.symmetric(
@@ -314,6 +313,28 @@ class _HomePageState extends State<HomePage> {
                     itemCount: restaurants.length,
                     itemBuilder: (context, index) {
                       final restaurant = restaurants[index];
+                      return FeaturedRestaurantCard(
+                        restaurant: restaurant,
+                        onTap: () => _navigateToRestaurantDetails(restaurant),
+                      );
+                    },
+                  );
+                } else if (state is RestaurantLoaded) {
+                  final featuredRestaurants =
+                      state.restaurants.where((r) => r.isFeatured).toList();
+                  if (featuredRestaurants.isEmpty) {
+                    return const Center(
+                      child: Text("No Featured restaurants available"),
+                    );
+                  }
+                  return ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: AppDimensions.marginSmall,
+                    ),
+                    itemCount: featuredRestaurants.length,
+                    itemBuilder: (_, int index) {
+                      final restaurant = featuredRestaurants[index];
                       return FeaturedRestaurantCard(
                         restaurant: restaurant,
                         onTap: () => _navigateToRestaurantDetails(restaurant),
