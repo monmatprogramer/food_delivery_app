@@ -32,7 +32,7 @@ class RestaurantBloc extends Bloc<RestaurantEvent, RestaurantState> {
       GetRestaurantsEvent event, Emitter<RestaurantState> emit) async {
     emit(RestaurantLoading());
     final result = await getRestaurants();
-    debugPrint("➡️ Result: $result");
+    // debugPrint("➡️ Result: $result");
     result.fold(
       (failure) => emit(RestaurantError(failure.message)),
       (restaurants) => emit(RestaurantLoaded(restaurants)),

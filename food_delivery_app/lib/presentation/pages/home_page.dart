@@ -80,7 +80,7 @@ class _HomePageState extends State<HomePage> {
         physics: const BouncingScrollPhysics(),
         slivers: [
           // App Bar with Banner
-          _builderAppBar(),
+          _buildAppBar(),
 
           // Category section
           _buildCategories(),
@@ -96,7 +96,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   /// Builder collapsible app bar with banner
-  Widget _builderAppBar() {
+  Widget _buildAppBar() {
     return SliverAppBar(
       expandedHeight: 200.0,
       floating: false,
@@ -300,12 +300,12 @@ class _HomePageState extends State<HomePage> {
                   );
                 } else if (state is FeaturedRestaurantLoaded) {
                   final restaurants = state.restaurants;
-
                   if (restaurants.isEmpty) {
                     return const Center(
                       child: Text("No Featured restaurants available"),
                     );
                   }
+                  // debugPrint("=> ${restaurants.isEmpty} <=");
                   return ListView.builder(
                     scrollDirection: Axis.horizontal,
                     padding: const EdgeInsets.symmetric(
@@ -314,6 +314,7 @@ class _HomePageState extends State<HomePage> {
                     itemCount: restaurants.length,
                     itemBuilder: (context, index) {
                       final restaurant = restaurants[index];
+                      // debugPrint("👉===> restaurant : $restaurant <====");
                       return FeaturedRestaurantCard(
                         restaurant: restaurant,
                         onTap: () => _navigateToRestaurantDetails(restaurant),
@@ -340,7 +341,7 @@ class _HomePageState extends State<HomePage> {
   Widget _buildRestaurantList() {
     return BlocBuilder<RestaurantBloc, RestaurantState>(
       builder: (context, state) {
-        debugPrint("🆗 state is : $state");
+        // debugPrint("🆗 state is : $state");
         if (state is RestaurantLoading) {
           return const SliverFillRemaining(
             child: LoadingWidget(),
@@ -391,7 +392,7 @@ class _HomePageState extends State<HomePage> {
             child: ErrorDisplayWidget(
               message: state.message,
               onRetry: () {
-                debugPrint("🔼 OnRetry is pressed");
+                // debugPrint("🔼 OnRetry is pressed");
                 context.read<RestaurantBloc>().add(GetRestaurantsEvent());
               },
             ),

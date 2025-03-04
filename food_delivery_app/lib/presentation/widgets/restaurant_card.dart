@@ -2,7 +2,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:food_delivery_app/core/contants/theme_constants.dart';
 import 'package:food_delivery_app/domain/entities/restaurant_entity.dart';
-import 'package:hive/hive.dart';
 
 class RestaurantListCard extends StatelessWidget {
   final RestaurantEntity restaurant;
@@ -71,6 +70,7 @@ class RestaurantListCard extends StatelessWidget {
               ),
               Expanded(
                   child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Restaurant nme
                   Text(

@@ -11,8 +11,8 @@ class FeaturedRestaurantCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint("👉👉👉 Restaurant: $restaurant");
     return Container(
+      color: Colors.blue,
       width: 200,
       margin: const EdgeInsets.symmetric(horizontal: AppDimensions.marginSmall),
       child: Card(
@@ -21,7 +21,10 @@ class FeaturedRestaurantCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(AppDimensions.borderRadiusMedium),
         ),
         child: InkWell(
-          onTap: onTap,
+          onTap: () {
+            debugPrint("👉👉 restaurant : $restaurant");
+            onTap();
+          },
           borderRadius: BorderRadius.circular(AppDimensions.borderRadiusMedium),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -52,15 +55,10 @@ class FeaturedRestaurantCard extends StatelessWidget {
                           ),
                         ),
                       )
-                    // Container(
-                    //     height: 120,
-                    //     width: double.infinity,
-                    //     color: Colors.grey[300],
-                    //   )
                     : Container(
                         height: 120,
                         width: double.infinity,
-                        color: Colors.grey[300],
+                        color: const Color.fromARGB(255, 221, 0, 0),
                         child: const Icon(
                           Icons.restaurant,
                           color: Colors.grey,

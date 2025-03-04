@@ -8,6 +8,9 @@ class RestaurantDetailsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        leading: BackButton(),
+      ),
       body: Center(
         child: Text(
           "Restaurant Details Page",
