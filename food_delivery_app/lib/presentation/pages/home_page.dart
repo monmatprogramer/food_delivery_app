@@ -314,7 +314,6 @@ class _HomePageState extends State<HomePage> {
                     itemCount: restaurants.length,
                     itemBuilder: (context, index) {
                       final restaurant = restaurants[index];
-                      // debugPrint("👉===> restaurant : $restaurant <====");
                       return FeaturedRestaurantCard(
                         restaurant: restaurant,
                         onTap: () => _navigateToRestaurantDetails(restaurant),
@@ -329,7 +328,10 @@ class _HomePageState extends State<HomePage> {
                     ),
                   );
                 }
-                return const SizedBox.shrink();
+                // return const SizedBox.shrink();
+                return const Center(
+                  child: Text("Waiting for featured restaurants..."),
+                );
               },
             ),
           ),

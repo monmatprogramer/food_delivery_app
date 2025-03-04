@@ -12,7 +12,6 @@ class FeaturedRestaurantCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.blue,
       width: 200,
       margin: const EdgeInsets.symmetric(horizontal: AppDimensions.marginSmall),
       child: Card(
@@ -42,6 +41,7 @@ class FeaturedRestaurantCard extends StatelessWidget {
                         fit: BoxFit.cover,
                         placeholder: (context, url) => Container(
                           height: 120,
+                          color: Colors.grey[200],
                           child: const Center(
                             child: CircularProgressIndicator(),
                           ),
@@ -58,7 +58,7 @@ class FeaturedRestaurantCard extends StatelessWidget {
                     : Container(
                         height: 120,
                         width: double.infinity,
-                        color: const Color.fromARGB(255, 221, 0, 0),
+                        color: Colors.grey[200],
                         child: const Icon(
                           Icons.restaurant,
                           color: Colors.grey,
