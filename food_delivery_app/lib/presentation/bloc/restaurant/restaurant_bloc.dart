@@ -23,8 +23,8 @@ class RestaurantBloc extends Bloc<RestaurantEvent, RestaurantState> {
   @override
   void onTransition(Transition<RestaurantEvent, RestaurantState> transition) {
     super.onTransition(transition);
-    debugPrint(
-        '➡️ RestaurantBloc: ${transition.event} => ${transition.nextState}');
+    // debugPrint(
+    //     '➡️ RestaurantBloc: ${transition.event} => ${transition.nextState}');
   }
 
   /// Hndle GetRestaurantsEvent

@@ -205,8 +205,11 @@ class _HomePageState extends State<HomePage> {
                 ),
                 itemCount: allCategories.length,
                 itemBuilder: (context, index) {
+                  //It store each Category Entity
                   final category = allCategories[index];
+                  // Firstly, _selectedCategoryIndex = 0;
                   final isSelected = _selectedCategoryIndex == index;
+                  // isSelected ; true, false, false,....
 
                   return GestureDetector(
                     onTap: () {
