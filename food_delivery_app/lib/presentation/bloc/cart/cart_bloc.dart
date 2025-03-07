@@ -14,6 +14,15 @@ class CartBloc extends Bloc<CartEvent, CartState> {
   }
 
   void _onAddToCart(AddToCartEvent event, Emitter<CartState> emit) {
+    // Track the state of this event
     final currentState = state;
+
+    if (currentState is CartLoaded) {
+      try {
+        final currentCart = currentState.cart;
+        // Check if item is from the same restaurant
+        if(currentCart.items.isNotEmpty && currentCart.restaurantId != event.item.restaurantId)
+      } catch (e) {}
+    }
   }
 }
