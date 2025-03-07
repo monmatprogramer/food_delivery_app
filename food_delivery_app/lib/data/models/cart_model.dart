@@ -11,6 +11,8 @@ class CartModel {
         0,
         (total, item) => total + (item.price * item.quantity),
       );
-
+  //Ex. total 800$, quantity 3 => totalItems = 800$ + 3 = 8003
   int get totalItems => items.fold(0, (total, item) => total + item.quantity);
+
+  bool get isEmpty => items.isEmpty;
 }
