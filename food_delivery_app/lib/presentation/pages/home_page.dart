@@ -54,7 +54,6 @@ class _HomePageState extends State<HomePage> {
 
   /// Load initial data (categories and rstaurants)
   void _loadData() {
-    debugPrint("ℹ _loadData is called");
     // Load categories
     context.read<CategoryBloc>().add(GetCategoryEvent());
 
