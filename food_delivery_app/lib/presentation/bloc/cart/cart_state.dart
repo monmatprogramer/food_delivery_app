@@ -7,6 +7,12 @@ abstract class CartState extends Equatable {
   @override
   List<Object?> get props => [];
 }
+//Snapshot
+/**
+ * 1. CartInital
+ * 2. CartLoaded
+ * 3. CartError
+ */
 
 // Loading at beginning
 class CartInitial extends CartState {}
@@ -23,6 +29,11 @@ class CartLoaded extends CartState {
 
   @override
   List<Object?> get props => [cart];
+
+  @override
+  String toString() {
+    return "CartLoaded($cart)";
+  }
 }
 
 class CartError extends CartState {

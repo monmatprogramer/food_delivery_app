@@ -15,4 +15,9 @@ class CartModel {
   int get totalItems => items.fold(0, (total, item) => total + item.quantity);
 
   bool get isEmpty => items.isEmpty;
+
+  @override
+  String toString() {
+    return "CartModel(items: $items, restaurantId: $restaurantId)";
+  }
 }

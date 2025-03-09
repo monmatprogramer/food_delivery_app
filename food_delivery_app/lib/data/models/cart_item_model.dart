@@ -48,4 +48,9 @@ class CartItemModel {
         quantity: quantity ?? this.quantity,
         restaurantId: restaurantId ?? this.restaurantId);
   }
+
+  @override
+  String toString() {
+    return "CarItemModel(id: $id, name: $name, price: $price, quantity: $quantity, restaurantId: $restaurantId)";
+  }
 }

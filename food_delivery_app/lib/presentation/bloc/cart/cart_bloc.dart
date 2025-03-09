@@ -4,6 +4,12 @@ import 'package:food_delivery_app/data/models/cart_model.dart';
 import 'package:food_delivery_app/presentation/bloc/cart/cart_event.dart';
 import 'package:food_delivery_app/presentation/bloc/cart/cart_state.dart';
 
+/**
+ * This is brain:
+ * 1. Receive actions from user (events)
+ * 2. Decides what to do with them
+ * 3. Updates the app's display (states)
+ */
 class CartBloc extends Bloc<CartEvent, CartState> {
   // Fistly, we need to add CartInitial state
   // because it as opening door to app
@@ -13,22 +19,39 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     // We register its type is AddToCartEvent.
     // Second, we call handler to do something to add item into Cart
     on<AddToCartEvent>(_onAddToCart);
+    on<RemoveFromCartEvent>(_onRemoveFromCart);
 
     // Initialize with empty cart.
-    emit(CartLoaded(
-      CartModel(items: [], restaurantId: 0),
-    ));
+    //emit(CartLoaded(CartModel(items: [], restaurantId: 0)));
+    //---For testing---
+    final pizzaItem = CartItemModel(
+      id: 1,
+      name: 'Pepperoni Pizza',
+      price: 12.99,
+      quantity: 1,
+      restaurantId: 101,
+    );
+    final cart = CartModel(items: [pizzaItem], restaurantId: 101);
+    emit(CartLoaded(cart));
   }
 
   void _onAddToCart(AddToCartEvent event, Emitter<CartState> emit) {
+    print("👉event: $event");
+    //Ex: AddToCartEvent(CartItemModel(
+    //  CarItemModel(id: 3, name: Caesar Salad, price: 7.5, quantity: 1, restaurantId: 102)
+    //));
     // Track the state of this event
     final currentState = state;
-
+    //Ex: CartLoaded(CartModel(items: [], restaurantId: 0)) <== this is state
+    // currentState = CartLoaded() => true
+    print("👉currentState: $currentState");
     if (currentState is CartLoaded) {
       try {
-        final currentCart =
-            currentState.cart; // get currentCart data from this state
+        final currentCart = currentState.cart;
+        //Ex: CartModel(items: [], restaurantId: 0) <== for the first state
+        print("👉currentCart: $currentCart");
 
+        // get currentCart data from this state
         // Check if item is from the same restaurant
         // User cannot add the same restaurant into cart but only update its quality
         // becase the restaurant already exist in the Cart.
@@ -48,12 +71,16 @@ class CartBloc extends Bloc<CartEvent, CartState> {
         } else {
           // Check if item already exists in cart
           // even.item.id : It is user input.
+          print('track on even: ${event.item}');
+          print("currentCart.items: ${currentCart.items}");
           final existingItemIndex =
               currentCart.items.indexWhere((item) => item.id == event.item.id);
+          print("existingItemIndex: $existingItemIndex");
 
           if (existingItemIndex >= 0) {
             //Existing
             final existingItem = currentCart.items[existingItemIndex];
+            print("existingItem: ${currentCart.items[existingItemIndex]}");
 
             //If the Cart has item(s), we only need to update its quantity
             // and other information of this item(s) still keep the same.
@@ -61,6 +88,11 @@ class CartBloc extends Bloc<CartEvent, CartState> {
             final updatedItem = existingItem.copyWith(
               quantity: existingItem.quantity + event.item.quantity,
             );
+
+            print("updatedItem: $updatedItem");
+            print("event.item.restaurantId: ${event.item.restaurantId}"); //102
+            print(
+                "currentCart.restaurantId: ${currentCart.restaurantId}"); //102
 
             final updatedItems = List<CartItemModel>.from(currentCart.items);
             updatedItems[existingItemIndex] = updatedItem;
@@ -76,6 +108,29 @@ class CartBloc extends Bloc<CartEvent, CartState> {
         }
       } catch (e) {
         emit(CartError("Failed to add item to cart"));
+      }
+    }
+  }
+
+  //* Remove Item from Cart
+  void _onRemoveFromCart(RemoveFromCartEvent event, Emitter<CartState> emit) {
+    final currentState = state;
+    if (currentState is CartLoaded) {
+      try {
+        print("➡️currentState.cart.items: ${currentState.cart.items}");
+        final updatedItems = currentState.cart.items
+            .where((item) => item.id != event.itemId)
+            .toList();
+
+        final newCart = CartModel(
+          items: updatedItems,
+          restaurantId:
+              updatedItems.isEmpty ? 0 : currentState.cart.restaurantId,
+        );
+        print("➡️updatedItems: $updatedItems");
+        emit(CartLoaded(newCart));
+      } catch (e) {
+        emit(CartError("Failed to remove item from Cart"));
       }
     }
   }

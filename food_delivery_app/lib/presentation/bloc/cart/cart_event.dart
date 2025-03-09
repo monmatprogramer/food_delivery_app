@@ -8,9 +8,11 @@ abstract class CartEvent extends Equatable {
   List<Object?> get props => [];
 }
 
+//* Add item(s) into Cart event (user actions)
 class AddToCartEvent extends CartEvent {
   // We add CartItemModel into Cart, that is add event.
   final CartItemModel item;
+  //Ex. CarItemModel(id: 3, name: Caesar Salad, price: 7.5, quantity: 1, restaurantId: 102)
 
   // But add it inot Cart, it is optional.
   const AddToCartEvent(this.item);
@@ -18,8 +20,14 @@ class AddToCartEvent extends CartEvent {
   //unique property for this class
   @override
   List<Object?> get props => [item];
+
+  @override
+  String toString() {
+    return "AddToCartEvent(CartItemModel($item))";
+  }
 }
 
+//* Remove an item from Cart event
 class RemoveFromCartEvent extends CartEvent {
   // We need only itemId to be removed from Cart.
   //Ex. id:1,pizza, id:2,chicken
