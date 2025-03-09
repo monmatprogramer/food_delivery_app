@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:food_delivery_app/presentation/bloc/cart/cart_bloc.dart';
 import 'package:food_delivery_app/presentation/bloc/category/category_bloc.dart';
 import 'package:food_delivery_app/presentation/bloc/restaurant/restaurant_bloc.dart';
 import 'package:food_delivery_app/test.dart';
@@ -7,10 +8,10 @@ import 'injection_container.dart' as di;
 import 'package:food_delivery_app/presentation/pages/home_page.dart';
 
 void main() async {
-  //WidgetsFlutterBinding.ensureInitialized();
+  WidgetsFlutterBinding.ensureInitialized();
   await di.init();
-  mainReresentor();
-  //runApp(const MyApp());
+  //mainReresentor();
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -30,6 +31,7 @@ class MyApp extends StatelessWidget {
         BlocProvider<CategoryBloc>(
           create: (_) => di.sl<CategoryBloc>(),
         ),
+        BlocProvider<CartBloc>(create: (_) => di.sl<CartBloc>())
       ],
       child: MaterialApp(
           debugShowCheckedModeBanner: false,

@@ -134,4 +134,38 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       }
     }
   }
+
+  //* Update item in the Cart
+  void _onUpdatedCartItem(UpdateCartItemEvent event, Emitter<CartState> emit) {
+    final currentState = state;
+    if (currentState is CartLoaded) {
+      final updatedItems = List<CartItemModel>.from(currentState.cart.items);
+      final itemIndex =
+          updatedItems.indexWhere((item) => item.id == event.itemId);
+
+      if (itemIndex >= 0) {
+        if (event.quantity <= 0) {
+          updatedItems.removeAt(itemIndex);
+        } else {
+          final item = updatedItems[itemIndex];
+          updatedItems[itemIndex] = item.copyWith(quantity: event.quantity);
+        }
+
+        final newCart = CartModel(
+            items: updatedItems,
+            restaurantId:
+                updatedItems.isEmpty ? 0 : currentState.cart.restaurantId);
+        emit(CartLoaded(newCart));
+      }
+
+      try {} catch (e) {
+        emit(CartError("Failed to update item in the Cart."));
+      }
+    }
+  }
+
+  //* CLear item from Cart
+  void _onClearCart(ClearCartEvent event, Emitter<CartState> emit) {
+    emit(CartLoaded(CartModel(items: [], restaurantId: 0)));
+  }
 }

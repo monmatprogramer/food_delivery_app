@@ -1,3 +1,4 @@
+import 'package:flutter/widgets.dart';
 import 'package:food_delivery_app/data/models/cart_item_model.dart';
 import 'package:food_delivery_app/data/models/cart_model.dart';
 import 'package:food_delivery_app/presentation/bloc/cart/cart_bloc.dart';
@@ -31,9 +32,9 @@ void mainReresentor() {
   );
 
   final cartBloc = CartBloc();
-  print("Initial state: ${cartBloc.state}");
+  debugPrint("Initial state: ${cartBloc.state}");
 
-  print("\nAdding pizza to cart...");
+  debugPrint("\nAdding pizza to cart...");
   //cartBloc.add(AddToCartEvent(pizzaItem));
 
   final stateAfterPizza = CartLoaded(
@@ -41,9 +42,9 @@ void mainReresentor() {
   );
   //resutl: CartLoaded(CartModel(items: [CarItemModel(id: 1, name: Pepperoni Pizza, price: 12.99, quantity: 1, restaurantId: 101)], restaurantId: 101))
 
-  print("State after adding pizza: $stateAfterPizza");
+  debugPrint("State after adding pizza: $stateAfterPizza");
 
-  print("\Adding another pizza...");
+  debugPrint("\nAdding another pizza...");
   //cartBloc.add(AddToCartEvent(pizzaItem));
 
   //Simulate state after adding another pizza
@@ -53,24 +54,23 @@ void mainReresentor() {
   );
   //Output: CartLoaded(CartModel(items: [CarItemModel(id: 1, name: Pepperoni Pizza, price: 12.99, quantity: 2, restaurantId: 101)], restaurantId: 101))
 
-  print("State after adding another pizza: $stateAfterSecondPizza");
+  debugPrint("State after adding another pizza: $stateAfterSecondPizza");
 
-  print("\nAdding burger from same restaurant...");
+  debugPrint("\nAdding burger from same restaurant...");
   //cartBloc.add(AddToCartEvent(burgerItem));
 
   // Simulated state after adding burger
   final stateAfterBurger = CartLoaded(
       CartModel(items: [pizzaWithQty2, burgerItem], restaurantId: 101));
-  print(stateAfterBurger);
 
-  print("\nTrying to add salad from different restaurant...");
+  debugPrint("\nTrying to add salad from different restaurant...");
   //cartBloc.add(AddToCartEvent(saladItem));
-  print("👉saladItem: $saladItem");
+  debugPrint("👉saladItem: $saladItem");
 
   final saladWithQty3 = saladItem.copyWith(quantity: 3);
   final stateAfterSalad = CartLoaded(
       CartModel(items: [saladWithQty3], restaurantId: saladItem.restaurantId));
-  print("Salad after update its quantity: $stateAfterSalad");
+  debugPrint("Salad after update its quantity: $stateAfterSalad");
 
   //* ----Remove an item from Cart testing-----
   cartBloc.add(RemoveFromCartEvent(1));

@@ -13,6 +13,7 @@ import 'package:food_delivery_app/domain/usecases/get_categories.dart';
 import 'package:food_delivery_app/domain/usecases/get_featured_restaurants.dart';
 import 'package:food_delivery_app/domain/usecases/get_restaurants.dart';
 import 'package:food_delivery_app/domain/usecases/get_restaurants_by_category.dart';
+import 'package:food_delivery_app/presentation/bloc/cart/cart_bloc.dart';
 import 'package:food_delivery_app/presentation/bloc/category/category_bloc.dart';
 import 'package:food_delivery_app/presentation/bloc/restaurant/restaurant_bloc.dart';
 import 'package:get_it/get_it.dart';
@@ -52,6 +53,9 @@ Future<void> init() async {
     () => CategoryBloc(
       getCategories: sl<GetCategories>(),
     ),
+  );
+  sl.registerFactory<CartBloc>(
+    () => CartBloc(),
   );
 
   //Use case

@@ -1,7 +1,13 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_delivery_app/core/contants/theme_constants.dart';
+import 'package:food_delivery_app/data/models/cart_item_model.dart';
 import 'package:food_delivery_app/domain/entities/restaurant_entity.dart';
+import 'package:food_delivery_app/presentation/bloc/cart/cart_bloc.dart';
+import 'package:food_delivery_app/presentation/bloc/cart/cart_event.dart';
+import 'package:food_delivery_app/presentation/bloc/cart/cart_state.dart';
+import 'package:food_delivery_app/presentation/pages/cart_page.dart';
 
 class RestaurantDetailsPage extends StatelessWidget {
   final RestaurantEntity restaurant;
@@ -259,175 +265,209 @@ class RestaurantDetailsPage extends StatelessWidget {
   // Menu section widget
   Widget _buildMenuSection() {
     final menuItems = [
-      {'name': 'Specialty Burger', 'price': '\$9.99', 'popular': true},
-      {'name': 'Classic Pizza', 'price': '\$12.99', 'popular': true},
-      {'name': 'Fresh Salad', 'price': '\$7.99', 'popular': false},
-      {'name': 'Vegan Wrap', 'price': '\$8.99', 'popular': false},
-      {'name': 'Dessert Platter', 'price': '\$6.99', 'popular': true},
+      {'id': 1, 'name': 'Specialty Burger', 'price': 9.99, 'popular': true},
+      {'id': 2, 'name': 'Classic Pizza', 'price': 12.99, 'popular': true},
+      {'id': 3, 'name': 'Fresh Salad', 'price': 7.99, 'popular': false},
+      {'id': 4, 'name': 'Vegan Wrap', 'price': 8.99, 'popular': false},
+      {'id': 5, 'name': 'Dessert Platter', 'price': 6.99, 'popular': true},
     ];
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        //* Menu header (title)
-        const Text(
-          "Menu",
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: AppDimensions.fontExtraLarge,
-          ),
-        ),
-        const SizedBox(
-          height: AppDimensions.marginMedium,
-        ),
-        //* Menu body (Popular menu)
-        const Text(
-          "Popular Items",
-          style: TextStyle(
-            fontSize: AppDimensions.fontLarge,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        const SizedBox(
-          height: AppDimensions.marginSmall,
-        ),
-        //* Menu items
-        ...menuItems.map((item) {
-          final bool isPopular = item['popular'] as bool;
-          if (!isPopular) return const SizedBox.shrink();
-          return Card(
-            margin: const EdgeInsets.only(bottom: AppDimensions.marginSmall),
-            elevation: 4,
-            child: Padding(
-              padding: const EdgeInsets.only(
-                bottom: AppDimensions.marginMedium,
-                top: AppDimensions.marginMedium,
-                left: AppDimensions.marginMedium,
-                right: AppDimensions.marginMedium,
+    return BlocBuilder<CartBloc, CartState>(
+      builder: (context, state) {
+        if (state is CartLoaded) {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              //* Menu header (title)
+              const Text(
+                "Menu",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: AppDimensions.fontExtraLarge,
+                ),
               ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  //* Item name & price
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        item['name'] as String,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      Text(
-                        item['price'] as String,
-                        style: const TextStyle(
-                          color: AppColors.primary,
-                        ),
-                      )
-                    ],
-                  ),
-                  Expanded(child: SizedBox()),
-                  //* Button for adding the item
-                  ElevatedButton(
-                    onPressed: () {},
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.primary,
-                      foregroundColor: Colors.white,
-                      minimumSize: const Size(40, 36),
-                      shadowColor: Colors.amber,
-                    ),
-                    child: const Text("Add"),
-                  ),
-                  const SizedBox(
-                    height: AppDimensions.marginMedium,
-                  ),
-                ],
+              const SizedBox(
+                height: AppDimensions.marginMedium,
               ),
-            ),
-          );
-        }),
-        //* All items
-        const Text(
-          "All items",
-          style: TextStyle(
-            fontSize: AppDimensions.fontLarge,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        const SizedBox(
-          height: AppDimensions.marginSmall,
-        ),
-        //* Menu items
-        ...menuItems.map(
-          (item) {
-            return Card(
-              margin: const EdgeInsets.only(bottom: AppDimensions.marginSmall),
-              child: Padding(
-                padding: const EdgeInsets.all(AppDimensions.marginMedium),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+              //* Menu body (Popular menu)
+              const Text(
+                "Popular Items",
+                style: TextStyle(
+                  fontSize: AppDimensions.fontLarge,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(
+                height: AppDimensions.marginSmall,
+              ),
+              //* Menu items
+              ...menuItems.map((item) {
+                final bool isPopular = item['popular'] as bool;
+                if (!isPopular) return const SizedBox.shrink();
+                return Card(
+                  margin:
+                      const EdgeInsets.only(bottom: AppDimensions.marginSmall),
+                  elevation: 4,
+                  child: Padding(
+                    padding: const EdgeInsets.all(AppDimensions.marginMedium),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Row(
+                        //* Item name & price
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            //* name of menu item
                             Text(
                               item['name'] as String,
                               style: const TextStyle(
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-
-                            //* tag of popular on the menu items
-                            if (item['popular'] as bool)
-                              Container(
-                                margin: const EdgeInsets.only(
-                                    left: AppDimensions.marginSmall),
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 6,
-                                  vertical: 2,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: Colors.amber,
-                                  borderRadius: BorderRadius.circular(
-                                      AppDimensions.borderRadiusSmall),
-                                ),
-                                child: const Text(
-                                  "Popular",
-                                  style: TextStyle(
-                                    fontSize: 10,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
+                            Text(
+                              "\$${item['price']}",
+                              style: const TextStyle(
+                                color: AppColors.primary,
                               ),
+                            )
                           ],
                         ),
-                        //*
-                        Text(
-                          item['price'] as String,
-                          style: const TextStyle(
-                            color: AppColors.primary,
+                        Expanded(child: SizedBox()),
+                        //* Button for adding the item
+                        ElevatedButton(
+                          onPressed: () {
+                            // Add the item to the cart
+
+                            final cartItem = CartItemModel(
+                              id: item['id'] as int,
+                              name: item['name'] as String,
+                              price: item['price'] as double,
+                              quantity: 1,
+                              restaurantId: restaurant.id,
+                            );
+                            context
+                                .read<CartBloc>()
+                                .add(AddToCartEvent(cartItem));
+
+                            // Show a snackbar
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text("${item['name']} added to cart"),
+                                duration: const Duration(seconds: 2),
+                                action: SnackBarAction(
+                                  label: "View Cart",
+                                  onPressed: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (_) => CartPage()));
+                                  },
+                                ),
+                              ),
+                            );
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.primary,
+                            foregroundColor: Colors.white,
+                            minimumSize: const Size(40, 36),
+                            shadowColor: Colors.amber,
                           ),
+                          child: const Text("Add"),
+                        ),
+                        const SizedBox(
+                          height: AppDimensions.marginMedium,
                         ),
                       ],
                     ),
-                    ElevatedButton(
-                      onPressed: () {},
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.primary,
-                        foregroundColor: Colors.white,
-                        minimumSize: const Size(40, 36),
-                      ),
-                      child: const Text("Add"),
-                    )
-                  ],
+                  ),
+                );
+              }),
+              //* All items
+              const Text(
+                "All items",
+                style: TextStyle(
+                  fontSize: AppDimensions.fontLarge,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
-            );
-          },
-        ),
-      ],
+              const SizedBox(
+                height: AppDimensions.marginSmall,
+              ),
+              //* Menu items
+              ...menuItems.map(
+                (item) {
+                  return Card(
+                    margin: const EdgeInsets.only(
+                        bottom: AppDimensions.marginSmall),
+                    child: Padding(
+                      padding: const EdgeInsets.all(AppDimensions.marginMedium),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  //* name of menu item
+                                  Text(
+                                    item['name'] as String,
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+
+                                  //* tag of popular on the menu items
+                                  if (item['popular'] as bool)
+                                    Container(
+                                      margin: const EdgeInsets.only(
+                                          left: AppDimensions.marginSmall),
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 6,
+                                        vertical: 2,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: Colors.amber,
+                                        borderRadius: BorderRadius.circular(
+                                            AppDimensions.borderRadiusSmall),
+                                      ),
+                                      child: const Text(
+                                        "Popular",
+                                        style: TextStyle(
+                                          fontSize: 10,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                ],
+                              ),
+                              //*
+                              Text(
+                                "\$${item['price'].toString()}",
+                                style: const TextStyle(
+                                  color: AppColors.primary,
+                                ),
+                              ),
+                            ],
+                          ),
+                          ElevatedButton(
+                            onPressed: () {},
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: AppColors.primary,
+                              foregroundColor: Colors.white,
+                              minimumSize: const Size(40, 36),
+                            ),
+                            child: const Text("Add"),
+                          )
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ],
+          );
+        }
+        return const SliverFillRemaining();
+      },
     );
   }
 
