@@ -335,7 +335,7 @@ class RestaurantDetailsPage extends StatelessWidget {
                         ElevatedButton(
                           onPressed: () {
                             // Add the item to the cart
-
+                            print("👉restaurantId: ${restaurant.id}");
                             final cartItem = CartItemModel(
                               id: item['id'] as int,
                               name: item['name'] as String,
@@ -343,9 +343,9 @@ class RestaurantDetailsPage extends StatelessWidget {
                               quantity: 1,
                               restaurantId: restaurant.id,
                             );
-                            context
-                                .read<CartBloc>()
-                                .add(AddToCartEvent(cartItem));
+                            context.read<CartBloc>().add(
+                                  AddToCartEvent(cartItem),
+                                );
 
                             // Show a snackbar
                             ScaffoldMessenger.of(context).showSnackBar(
@@ -482,27 +482,52 @@ class RestaurantDetailsPage extends StatelessWidget {
           offset: Offset(0, -2),
         )
       ]),
-      child: ElevatedButton(
-        onPressed: () {},
-        style: ElevatedButton.styleFrom(
-          backgroundColor: AppColors.primary,
-          foregroundColor: Colors.white,
-          padding: const EdgeInsets.symmetric(
-            vertical: AppDimensions.marginMedium,
-          ),
-          shape: RoundedRectangleBorder(
-            borderRadius:
-                BorderRadius.circular(AppDimensions.borderRadiusMedium),
-          ),
-        ),
-        child: const Text(
-          "Start Orders",
-          style: TextStyle(
-            fontSize: AppDimensions.fontLarge,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ),
+      child: BlocBuilder<CartBloc, CartState>(builder: (context, state) {
+        if (state is CartLoaded) {
+          final hasItemsInCart =
+              state.cart.items.isNotEmpty; // true for have, false for emtpy
+          final fromCurrentRestaurant =
+              state.cart.restaurantId == restaurant.id ||
+                  state.cart.restaurantId == 0;
+          return ElevatedButton(
+            onPressed: () {
+              if (hasItemsInCart && fromCurrentRestaurant) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => CartPage(),
+                  ),
+                );
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text("Please add items to your "),
+                    duration: const Duration(seconds: 2),
+                  ),
+                );
+              }
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.primary,
+              foregroundColor: Colors.white,
+              padding: const EdgeInsets.symmetric(
+                vertical: AppDimensions.marginMedium,
+              ),
+              shape: RoundedRectangleBorder(
+                borderRadius:
+                    BorderRadius.circular(AppDimensions.borderRadiusMedium),
+              ),
+            ),
+            child: const Text(
+              "Start Orders",
+              style: TextStyle(
+                fontSize: AppDimensions.fontLarge,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          );
+        }
+      }),
     );
   }
 }

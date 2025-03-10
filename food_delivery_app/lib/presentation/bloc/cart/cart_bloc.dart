@@ -25,7 +25,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     //emit(CartLoaded(CartModel(items: [], restaurantId: 0)));
     //---For testing---
     final pizzaItem = CartItemModel(
-      id: 1,
+      id: 2,
       name: 'Pepperoni Pizza',
       price: 12.99,
       quantity: 1,
