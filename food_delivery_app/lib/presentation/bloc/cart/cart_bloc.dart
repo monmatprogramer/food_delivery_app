@@ -20,18 +20,20 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     // Second, we call handler to do something to add item into Cart
     on<AddToCartEvent>(_onAddToCart);
     on<RemoveFromCartEvent>(_onRemoveFromCart);
+    on<UpdateCartItemEvent>(_onUpdatedCartItem);
+    on<ClearCartEvent>(_onClearCart);
 
     // Initialize with empty cart.
     //emit(CartLoaded(CartModel(items: [], restaurantId: 0)));
     //---For testing---
     final pizzaItem = CartItemModel(
-      id: 2,
+      id: 1,
       name: 'Pepperoni Pizza',
       price: 12.99,
       quantity: 1,
-      restaurantId: 101,
+      restaurantId: 1,
     );
-    final cart = CartModel(items: [pizzaItem], restaurantId: 101);
+    final cart = CartModel(items: [pizzaItem], restaurantId: 1);
     emit(CartLoaded(cart));
   }
 

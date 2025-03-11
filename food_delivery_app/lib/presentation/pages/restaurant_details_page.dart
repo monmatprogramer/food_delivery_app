@@ -484,11 +484,17 @@ class RestaurantDetailsPage extends StatelessWidget {
       ]),
       child: BlocBuilder<CartBloc, CartState>(builder: (context, state) {
         if (state is CartLoaded) {
+          //Check Cart first
           final hasItemsInCart =
               state.cart.items.isNotEmpty; // true for have, false for emtpy
+
           final fromCurrentRestaurant =
               state.cart.restaurantId == restaurant.id ||
                   state.cart.restaurantId == 0;
+          //* user can only order fro one restaurant at a time
+          //* Ex. Current cart: {item: [...],restaurantId:101}
+          //* And
+
           return ElevatedButton(
             onPressed: () {
               if (hasItemsInCart && fromCurrentRestaurant) {
@@ -499,12 +505,35 @@ class RestaurantDetailsPage extends StatelessWidget {
                   ),
                 );
               } else {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text("Please add items to your "),
-                    duration: const Duration(seconds: 2),
-                  ),
-                );
+                if (!hasItemsInCart) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text("Please add items to your cart "),
+                      duration: const Duration(seconds: 2),
+                    ),
+                  );
+                } else if (!fromCurrentRestaurant) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(
+                          "You already have items form another restaurant in your cart"),
+                      duration: const Duration(seconds: 2),
+                      action: SnackBarAction(
+                        label: "Clear Cart",
+                        onPressed: () {
+                          context.read<CartBloc>().add(ClearCartEvent());
+                        },
+                      ),
+                    ),
+                  );
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text("Please add items to your cart first"),
+                      duration: const Duration(seconds: 2),
+                    ),
+                  );
+                }
               }
             },
             style: ElevatedButton.styleFrom(
@@ -518,15 +547,18 @@ class RestaurantDetailsPage extends StatelessWidget {
                     BorderRadius.circular(AppDimensions.borderRadiusMedium),
               ),
             ),
-            child: const Text(
-              "Start Orders",
+            child: Text(
+              hasItemsInCart && fromCurrentRestaurant
+                  ? "View Cart (${state.cart.totalItems})"
+                  : "Start Order ",
               style: TextStyle(
                 fontSize: AppDimensions.fontLarge,
                 fontWeight: FontWeight.bold,
               ),
             ),
           );
-        }
+        } else {}
+        return const SizedBox.shrink();
       }),
     );
   }

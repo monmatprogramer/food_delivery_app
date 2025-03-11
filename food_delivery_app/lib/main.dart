@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_delivery_app/presentation/bloc/cart/cart_bloc.dart';
 import 'package:food_delivery_app/presentation/bloc/category/category_bloc.dart';
 import 'package:food_delivery_app/presentation/bloc/restaurant/restaurant_bloc.dart';
-import 'package:food_delivery_app/test.dart';
 import 'injection_container.dart' as di;
 import 'package:food_delivery_app/presentation/pages/home_page.dart';
 
