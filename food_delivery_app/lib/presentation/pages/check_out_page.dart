@@ -1,3 +1,4 @@
+import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_delivery_app/core/contants/theme_constants.dart';
@@ -14,6 +15,19 @@ class CheckOutPage extends StatefulWidget {
 }
 
 class _CheckOutPageState extends State<CheckOutPage> {
+  final _formKey = GlobalKey<FormState>();
+  final _nameController = TextEditingController();
+  final _addressController = TextEditingController();
+  final _phoneController = TextEditingController();
+  String _paymentMethod = "Cash on Delivary";
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _addressController.dispose();
+    _phoneController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,9 +39,14 @@ class _CheckOutPageState extends State<CheckOutPage> {
       ),
       body: BlocBuilder<CartBloc, CartState>(builder: (context, state) {
         if (state is CartLoaded) {
-          print("🆗state.cart: ${state.cart}");
           final cart = state.cart;
+          if (cart.isEmpty) {
+            return const Center(
+              child: Text("Your cart is empty"),
+            );
+          }
           return Form(
+            key: _formKey,
             child: ListView(
               padding: const EdgeInsets.all(AppDimensions.marginMedium),
               children: [
@@ -42,36 +61,48 @@ class _CheckOutPageState extends State<CheckOutPage> {
                   height: AppDimensions.marginMedium,
                 ),
                 TextFormField(
-                  //TODO: add controller
+                  controller: _nameController,
                   decoration: const InputDecoration(
                     labelText: "Full name",
                     border: OutlineInputBorder(),
                   ),
-                  //TODO: Add validator
-                  validator: (value) {},
+                  validator: (value) => value == null || value.isEmpty
+                      ? "Please enter your name"
+                      : null,
                 ),
                 const SizedBox(
                   height: AppDimensions.marginMedium,
                 ),
                 TextFormField(
-                  //TODO: Add a controller
+                  controller: _addressController,
                   decoration: const InputDecoration(
                     labelText: "Delivary Address",
                     border: OutlineInputBorder(),
                   ),
-                  //TODO: Add validator
+                  textAlign: TextAlign.start,
+                  textAlignVertical: TextAlignVertical.top,
+                  validator: (value) {
+                    value = value!.trim();
+                    if (value.isEmpty) {
+                      return "Please enter your address";
+                    }
+                    return null;
+                  },
+                  maxLines: 3,
                 ),
                 const SizedBox(
                   height: AppDimensions.marginMedium,
                 ),
                 TextFormField(
-                  //TODO: Add a controller
+                  controller: _phoneController,
+                  keyboardType: TextInputType.phone,
                   decoration: InputDecoration(
                     labelText: "Phone Number",
                     border: OutlineInputBorder(),
                   ),
-
-                  //TODO: Add a validator
+                  validator: (value) => value == null || value.isEmpty
+                      ? "Please enter your phone number"
+                      : null,
                 ),
                 const SizedBox(
                   height: AppDimensions.marginMedium,
@@ -98,10 +129,12 @@ class _CheckOutPageState extends State<CheckOutPage> {
                       ],
                     ),
                     value: "Cash on Delivery",
-                    //TODO: Add group value
-                    groupValue: "Option1",
-                    //TODO: Add onChange method
-                    onChanged: (value) {},
+                    groupValue: _paymentMethod,
+                    onChanged: (value) {
+                      setState(
+                        () => _paymentMethod = value!,
+                      );
+                    },
                   ),
                 ),
                 Card(
@@ -116,19 +149,19 @@ class _CheckOutPageState extends State<CheckOutPage> {
                       ],
                     ),
                     value: "Credit Card",
-                    //TODO: Add group value
-                    groupValue: "Options1",
-                    //TODO: Add this method
-                    onChanged: (value) {},
+                    groupValue: _paymentMethod,
+                    onChanged: (value) => setState(
+                      () => _paymentMethod = value!,
+                    ),
                   ),
                 ),
                 Card(
                   child: RadioListTile(
                     value: "Digital Wallet",
-                    //TODO: Add group value
-                    groupValue: "Options1",
-                    //TODO: Add this method
-                    onChanged: (value) {},
+                    groupValue: _paymentMethod,
+                    onChanged: (value) => setState(
+                      () => _paymentMethod = value!,
+                    ),
                     title: Row(
                       children: [
                         Icon(Icons.account_balance_wallet),
@@ -163,16 +196,60 @@ class _CheckOutPageState extends State<CheckOutPage> {
                       const SizedBox(
                         height: AppDimensions.marginSmall,
                       ),
-                      //TODO: Item 
                       ...cart.items.map(
                         (item) => Padding(
                           padding: const EdgeInsets.symmetric(vertical: 4.0),
                           child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text("${item.name} x${item.quantity}"),
+                              Text(
+                                  '\$${(item.price * item.quantity).toStringAsFixed(2)}'),
                             ],
                           ),
                         ),
+                      ),
+                      const Divider(),
+                      // Subtotal
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text("Subtotal"),
+                          Text('\$${cart.totalPrice.toStringAsFixed(2)}'),
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 4,
+                      ),
+                      // Tax
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text("Tax (8%)"),
+                          Text(
+                              '\$${(cart.totalPrice * 0.08).toStringAsFixed(2)}'),
+                        ],
+                      ),
+                      const Divider(),
+                      // Total
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text(
+                            'Total',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          Text(
+                            '\$${(cart.totalPrice + 2.99 + (cart.totalPrice * 0.08)).toStringAsFixed(2)}',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: AppColors.primary,
+                              fontSize: AppDimensions.fontLarge,
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
@@ -181,8 +258,55 @@ class _CheckOutPageState extends State<CheckOutPage> {
             ),
           );
         }
-        return const SizedBox.shrink();
+        return const Center(
+          child: CircularProgressIndicator(),
+        );
       }),
+      bottomNavigationBar: Container(
+        padding: const EdgeInsets.all(AppDimensions.marginMedium),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black12,
+              blurRadius: 8,
+              offset: const Offset(0, -2),
+            ),
+          ],
+        ),
+        child: ElevatedButton(
+          onPressed: () {
+            if (_formKey.currentState!.validate()) {
+              final order = {
+                'name': _nameController.text,
+                'address': _addressController.text,
+                'phone': _phoneController.text,
+                'paymentMethod': _paymentMethod,
+                'items':
+                    (context.read<CartBloc>().state as CartLoaded).cart.items,
+              };
+            }
+          },
+          style: ElevatedButton.styleFrom(
+            backgroundColor: AppColors.primary,
+            foregroundColor: Colors.white,
+            padding: const EdgeInsets.symmetric(
+              vertical: AppDimensions.marginMedium,
+            ),
+            shape: RoundedRectangleBorder(
+              borderRadius:
+                  BorderRadius.circular(AppDimensions.borderRadiusMedium),
+            ),
+          ),
+          child: const Text(
+            "Place order",
+            style: TextStyle(
+              fontSize: AppDimensions.fontLarge,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
