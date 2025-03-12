@@ -28,6 +28,6 @@ class OrderModel {
   factory OrderModel.fromJson(Map<String, dynamic> json) =>
       _$OrderModelFromJson(json);
 
-  Map<String, dynamic> totalJson() => _$OrderModelToJson(this);
+  Map<String, dynamic> toJson() => _$OrderModelToJson(this);
 }
 

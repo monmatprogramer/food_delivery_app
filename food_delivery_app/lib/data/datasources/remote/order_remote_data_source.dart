@@ -1,3 +1,7 @@
+import 'package:dio/dio.dart';
+import 'package:food_delivery_app/core/contants/app_constants.dart';
+import 'package:food_delivery_app/core/error/exceptions.dart';
+import 'package:food_delivery_app/core/network/dio_client.dart';
 import 'package:food_delivery_app/data/models/order_model.dart';
 
 abstract class OrderRemoteDataSource {
@@ -11,11 +15,23 @@ abstract class OrderRemoteDataSource {
   Future<OrderModel> getOrderById(int id);
 }
 
-class OrderRemoteDataSourceImpl implements OrderRemoteDataSource{
+class OrderRemoteDataSourceImpl implements OrderRemoteDataSource {
+  final ApiClient client;
+
+  const OrderRemoteDataSourceImpl({required this.client});
   @override
-  Future<OrderModel> createOrder(OrderModel order) {
-    // TODO: implement createOrder
-    throw UnimplementedError();
+  Future<OrderModel> createOrder(OrderModel order) async {
+    try {
+      final response = await client.post(
+        AppConstants.orderEndpoint,
+        data: order.toJson(),
+      );
+      return OrderModel.fromJson(response.data);
+    } on DioException catch (e) {
+      throw ServerException(
+        message: e.response?.statusMessage ?? AppConstants.serverErrorMessage,
+      );
+    }
   }
 
   @override
