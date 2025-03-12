@@ -3,7 +3,7 @@ import 'package:food_delivery_app/core/error/exceptions.dart';
 import 'package:food_delivery_app/core/error/failures.dart';
 import 'package:food_delivery_app/core/network/network_info.dart';
 import 'package:food_delivery_app/data/datasources/local/restaurant_local_data_source.dart';
-import 'package:food_delivery_app/data/datasources/restaurant_remote_data_source.dart';
+import 'package:food_delivery_app/data/datasources/remote/restaurant_remote_data_source.dart';
 import 'package:food_delivery_app/domain/entities/category_entity.dart';
 import 'package:food_delivery_app/domain/entities/restaurant_entity.dart';
 import 'package:food_delivery_app/domain/reponsitories/restaurant_repository.dart';
