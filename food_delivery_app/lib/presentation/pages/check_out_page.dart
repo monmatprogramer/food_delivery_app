@@ -1,11 +1,13 @@
-import 'package:dartz/dartz.dart';
+import 'package:dartz/dartz.dart' as dartz;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_delivery_app/core/contants/theme_constants.dart';
 import 'package:food_delivery_app/data/models/cart_item_model.dart';
 import 'package:food_delivery_app/data/models/cart_model.dart';
 import 'package:food_delivery_app/presentation/bloc/cart/cart_bloc.dart';
+import 'package:food_delivery_app/presentation/bloc/cart/cart_event.dart';
 import 'package:food_delivery_app/presentation/bloc/cart/cart_state.dart';
+import 'package:food_delivery_app/presentation/pages/order_success_page.dart';
 
 class CheckOutPage extends StatefulWidget {
   const CheckOutPage({super.key});
@@ -282,9 +284,23 @@ class _CheckOutPageState extends State<CheckOutPage> {
                 'address': _addressController.text,
                 'phone': _phoneController.text,
                 'paymentMethod': _paymentMethod,
+                //Cart item from the CartBloc state
                 'items':
                     (context.read<CartBloc>().state as CartLoaded).cart.items,
               };
+              //Item: CartLoaded(CartModel(items: [CarItemModel(id: 1, name: Pepperoni Pizza, price: 12.99, quantity: 1, restaurantId: 1)], restaurantId: 1))
+              //item.cart.items: [CarItemModel(id: 1, name: Pepperoni Pizza, price: 12.99, quantity: 1, restaurantId: 1)]
+              // {name: q, address: q, phone: 2, paymentMethod: Cash on Delivary, items: [CarItemModel(id: 1, name: Pepperoni Pizza, price: 12.99, quantity: 1, restaurantId: 1)]}
+              context.read<CartBloc>().add(ClearCartEvent());
+
+              // Navigate to success page
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => OrderSuccessPage(),
+                ),
+                (route) => false,
+              );
             }
           },
           style: ElevatedButton.styleFrom(

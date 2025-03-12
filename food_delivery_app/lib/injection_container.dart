@@ -4,6 +4,7 @@ import 'package:food_delivery_app/core/network/dio_client.dart';
 import 'package:food_delivery_app/core/network/network_info.dart';
 import 'package:food_delivery_app/data/datasources/local/restaurant_local_data_source.dart';
 import 'package:food_delivery_app/data/datasources/restaurant_remote_data_source.dart';
+import 'package:food_delivery_app/data/models/cart_item_model.dart';
 import 'package:food_delivery_app/data/models/category_model.dart';
 import 'package:food_delivery_app/data/models/restaurant_model.dart';
 import 'package:food_delivery_app/data/models/tag_model.dart';
@@ -33,6 +34,7 @@ Future<void> init() async {
   Hive.registerAdapter(RestaurantModelAdapter());
   Hive.registerAdapter(CategoryModelAdapter());
   Hive.registerAdapter(TagModelAdapter());
+  Hive.registerAdapter(CartItemModelAdapter());
 
   // Open Hive boxes
   final restaurantsBox =

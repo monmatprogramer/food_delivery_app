@@ -1,16 +1,18 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_delivery_app/core/contants/app_constants.dart';
 import 'package:food_delivery_app/core/contants/theme_constants.dart';
 import 'package:food_delivery_app/domain/entities/category_entity.dart';
 import 'package:food_delivery_app/domain/entities/restaurant_entity.dart';
+import 'package:food_delivery_app/presentation/bloc/cart/cart_bloc.dart';
+import 'package:food_delivery_app/presentation/bloc/cart/cart_state.dart';
 import 'package:food_delivery_app/presentation/bloc/category/category_bloc.dart';
 import 'package:food_delivery_app/presentation/bloc/category/category_event.dart';
 import 'package:food_delivery_app/presentation/bloc/category/category_state.dart';
 import 'package:food_delivery_app/presentation/bloc/restaurant/restaurant_bloc.dart';
 import 'package:food_delivery_app/presentation/bloc/restaurant/restaurant_event.dart';
 import 'package:food_delivery_app/presentation/bloc/restaurant/restaurant_state.dart';
+import 'package:food_delivery_app/presentation/pages/cart_page.dart';
 import 'package:food_delivery_app/presentation/pages/restaurant_details_page.dart';
 import 'package:food_delivery_app/presentation/widgets/error_widget.dart';
 import 'package:food_delivery_app/presentation/widgets/featured_restaurant_card.dart';
@@ -102,6 +104,69 @@ class _HomePageState extends State<HomePage> {
       pinned: true,
       stretch: true,
       backgroundColor: AppColors.primary,
+      actions: [
+        BlocBuilder<CartBloc, CartState>(
+          builder: (context, state) {
+            if (state is CartLoaded && state.cart.totalItems > 0) {
+              return Stack(
+                alignment: Alignment.center,
+                children: [
+                  IconButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => CartPage(),
+                        ),
+                      );
+                    },
+                    icon: const Icon(
+                      Icons.shopping_cart,
+                      color: Colors.white,
+                    ),
+                  ),
+                  Positioned(
+                    right: 5,
+                    bottom: 29,
+                    child: Container(
+                      padding: const EdgeInsets.all(4),
+                      decoration: BoxDecoration(
+                        color: Colors.red,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      constraints: const BoxConstraints(
+                        minHeight: 16,
+                        minWidth: 16,
+                      ),
+                      child: Text(
+                        state.cart.totalItems.toString(),
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 10,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  )
+                ],
+              );
+            }
+            return IconButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => CartPage(),
+                  ),
+                );
+              },
+              icon: const Icon(
+                Icons.shopping_cart,
+              ),
+            );
+          },
+        ),
+      ],
       flexibleSpace: FlexibleSpaceBar(
         title: _isAppBarCollapsed
             ? const Text(
