@@ -1,9 +1,10 @@
-import 'package:dartz/dartz.dart' as dartz;
 import 'package:flutter/material.dart';
+import 'package:food_delivery_app/data/models/order_model.dart';
+import 'package:food_delivery_app/domain/usecases/create_order.dart';
+import 'package:food_delivery_app/injection_container.dart';
+import 'package:get_it/get_it.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_delivery_app/core/contants/theme_constants.dart';
-import 'package:food_delivery_app/data/models/cart_item_model.dart';
-import 'package:food_delivery_app/data/models/cart_model.dart';
 import 'package:food_delivery_app/presentation/bloc/cart/cart_bloc.dart';
 import 'package:food_delivery_app/presentation/bloc/cart/cart_event.dart';
 import 'package:food_delivery_app/presentation/bloc/cart/cart_state.dart';
@@ -279,18 +280,37 @@ class _CheckOutPageState extends State<CheckOutPage> {
         child: ElevatedButton(
           onPressed: () {
             if (_formKey.currentState!.validate()) {
-              final order = {
-                'name': _nameController.text,
-                'address': _addressController.text,
-                'phone': _phoneController.text,
-                'paymentMethod': _paymentMethod,
+              final cartState = context.read<CartBloc>().state as CartLoaded;
+              final cart = cartState.cart;
+              //Calculate total
+              final subtotal = cart.totalPrice;
+              final deliveryFee = 2.99;
+              final tax = subtotal * 0.08;
+              final total = subtotal + deliveryFee + tax;
+
+              final order = OrderModel(
+                name: _nameController.text,
+                address: _addressController.text,
+                phone: _phoneController.text,
+                paymentMethod: _paymentMethod,
                 //Cart item from the CartBloc state
-                'items':
-                    (context.read<CartBloc>().state as CartLoaded).cart.items,
-              };
+                items: cart.items,
+              );
               //Item: CartLoaded(CartModel(items: [CarItemModel(id: 1, name: Pepperoni Pizza, price: 12.99, quantity: 1, restaurantId: 1)], restaurantId: 1))
               //item.cart.items: [CarItemModel(id: 1, name: Pepperoni Pizza, price: 12.99, quantity: 1, restaurantId: 1)]
               // {name: q, address: q, phone: 2, paymentMethod: Cash on Delivary, items: [CarItemModel(id: 1, name: Pepperoni Pizza, price: 12.99, quantity: 1, restaurantId: 1)]}
+              //* Show loading dialog
+              showDialog(
+                barrierDismissible: false,
+                context: context,
+                builder: (context) => const Center(
+                  child: CircularProgressIndicator(),
+                ),
+              );
+
+              // Create the order
+              sl<CreateOrder>().call(order);
+
               context.read<CartBloc>().add(ClearCartEvent());
 
               // Navigate to success page

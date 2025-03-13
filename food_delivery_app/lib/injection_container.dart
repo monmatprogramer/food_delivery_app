@@ -3,14 +3,17 @@ import 'package:food_delivery_app/core/contants/app_constants.dart';
 import 'package:food_delivery_app/core/network/dio_client.dart';
 import 'package:food_delivery_app/core/network/network_info.dart';
 import 'package:food_delivery_app/data/datasources/local/restaurant_local_data_source.dart';
+import 'package:food_delivery_app/data/datasources/remote/order_remote_data_source.dart';
 import 'package:food_delivery_app/data/datasources/remote/restaurant_remote_data_source.dart';
 import 'package:food_delivery_app/data/models/cart_item_model.dart';
 import 'package:food_delivery_app/data/models/category_model.dart';
-import 'package:food_delivery_app/data/models/order_model.dart';
 import 'package:food_delivery_app/data/models/restaurant_model.dart';
 import 'package:food_delivery_app/data/models/tag_model.dart';
+import 'package:food_delivery_app/domain/reponsitories/order_repository.dart';
+import 'package:food_delivery_app/domain/reponsitories/order_repository_impl.dart';
 import 'package:food_delivery_app/domain/reponsitories/restaurant_repository.dart';
 import 'package:food_delivery_app/domain/reponsitories/restaurant_repository_impl.dart';
+import 'package:food_delivery_app/domain/usecases/create_order.dart';
 import 'package:food_delivery_app/domain/usecases/get_categories.dart';
 import 'package:food_delivery_app/domain/usecases/get_featured_restaurants.dart';
 import 'package:food_delivery_app/domain/usecases/get_restaurants.dart';
@@ -66,12 +69,19 @@ Future<void> init() async {
   sl.registerLazySingleton(() => GetFeaturedRestaurants(sl()));
   sl.registerLazySingleton(() => GetRestaurantsByCategory(sl()));
   sl.registerLazySingleton(() => GetCategories(sl()));
+  sl.registerLazySingleton(() => CreateOrder(repository: sl()));
 
   // Repository
   sl.registerLazySingleton<RestaurantRepository>(
     () => RestaurantRepositoryImpl(
       remoteDataSource: sl(),
       localDataSource: sl(),
+      networkInfo: sl(),
+    ),
+  );
+  sl.registerLazySingleton<OrderRepository>(
+    () => OrderRepositoryImpl(
+      remoteDataSource: sl(),
       networkInfo: sl(),
     ),
   );
@@ -85,6 +95,11 @@ Future<void> init() async {
     () => RestaurantLocalDataSourceImpl(
       restaurantBox: restaurantsBox,
       categoriesBox: categoriesBox,
+    ),
+  );
+  sl.registerLazySingleton<OrderRemoteDataSource>(
+    () => OrderRemoteDataSourceImpl(
+      client: sl(),
     ),
   );
 

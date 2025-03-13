@@ -35,14 +35,30 @@ class OrderRemoteDataSourceImpl implements OrderRemoteDataSource {
   }
 
   @override
-  Future<OrderModel> getOrderById(int id) {
-    // TODO: implement getOrderById
-    throw UnimplementedError();
+  Future<OrderModel> getOrderById(int id) async {
+    try {
+      final response = await client.get("orders/$id/");
+      return OrderModel.fromJson(response.data);
+    } on DioException catch (e) {
+      throw ServerException(
+        message: e.response?.statusMessage ?? AppConstants.serverErrorMessage,
+      );
+    }
   }
 
   @override
-  Future<List<OrderModel>> getOrders() {
-    // TODO: implement getOrders
-    throw UnimplementedError();
+  Future<List<OrderModel>> getOrders() async {
+    try {
+      final response = await client.get('orders/');
+      return (response.data['results'] as List)
+          .map((json) => OrderModel.fromJson(json))
+          .toList();
+    } on DioException catch (e) {
+      throw ServerException(
+        message: e.response?.statusMessage ?? AppConstants.serverErrorMessage,
+      );
+    } catch (e) {
+      throw ServerException(message: AppConstants.serverErrorMessage);
+    }
   }
 }
