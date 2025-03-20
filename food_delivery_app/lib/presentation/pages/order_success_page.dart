@@ -3,7 +3,8 @@ import 'package:food_delivery_app/core/contants/theme_constants.dart';
 import 'package:food_delivery_app/presentation/pages/home_page.dart';
 
 class OrderSuccessPage extends StatelessWidget {
-  const OrderSuccessPage({super.key});
+  final int? orderId;
+  const OrderSuccessPage({super.key, this.orderId});
 
   @override
   Widget build(BuildContext context) {
@@ -32,6 +33,19 @@ class OrderSuccessPage extends StatelessWidget {
                 ),
                 textAlign: TextAlign.center,
               ),
+              const SizedBox(
+                height: AppDimensions.marginMedium,
+              ),
+              if (orderId != null)
+                Text(
+                  'Order #$orderId',
+                  style: const TextStyle(
+                    fontSize: AppDimensions.fontLarge,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.primary,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
               const SizedBox(
                 height: AppDimensions.marginMedium,
               ),

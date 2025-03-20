@@ -30,4 +30,3 @@ class OrderModel {
 
   Map<String, dynamic> toJson() => _$OrderModelToJson(this);
 }
-

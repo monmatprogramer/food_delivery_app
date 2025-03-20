@@ -34,6 +34,6 @@ select r.*, group_concat(c.name) as categories
 from food_delivery_db.restaurant r
 left join food_delivery_db.restaurant_category rc on r.id = rc.restaurant_id
 left join food_delivery_db.category c on rc.restaurant_id = c.id
-where r.isFeatured = 1;
+where r.isFeatured = 1
 group by r.id;
 

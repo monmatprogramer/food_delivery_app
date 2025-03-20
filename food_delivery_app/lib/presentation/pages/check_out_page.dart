@@ -295,6 +295,7 @@ class _CheckOutPageState extends State<CheckOutPage> {
                 paymentMethod: _paymentMethod,
                 //Cart item from the CartBloc state
                 items: cart.items,
+                totalPrice: total,
               );
               //Item: CartLoaded(CartModel(items: [CarItemModel(id: 1, name: Pepperoni Pizza, price: 12.99, quantity: 1, restaurantId: 1)], restaurantId: 1))
               //item.cart.items: [CarItemModel(id: 1, name: Pepperoni Pizza, price: 12.99, quantity: 1, restaurantId: 1)]
@@ -309,7 +310,26 @@ class _CheckOutPageState extends State<CheckOutPage> {
               );
 
               // Create the order
-              sl<CreateOrder>().call(order);
+              sl<CreateOrder>().call(order).then((result) {
+                // Close the loading dialog
+                Navigator.pop(context);
+                result.fold((failure) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(failure.message),
+                      backgroundColor: Colors.red,
+                    ),
+                  );
+                }, (order) {
+                  context.read<CartBloc>().add(ClearCartEvent());
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(
+                        builder: (_) => OrderSuccessPage(orderId: order.id)),
+                    (route) => false,
+                  );
+                });
+              });
 
               context.read<CartBloc>().add(ClearCartEvent());
 
